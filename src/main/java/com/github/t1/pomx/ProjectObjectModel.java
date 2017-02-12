@@ -44,10 +44,13 @@ class ProjectObjectModel {
             return;
         XmlElement packaging = packagings.get(0);
         GAV gav = GAV.split(packaging.getText());
-        packaging.getParent().addElement("groupId", before(packaging)).addText(gav.getGroupId());
-        packaging.getParent().addElement("artifactId", before(packaging)).addText(gav.getArtifactId());
-        packaging.getParent().addElement("version", before(packaging)).addText(gav.getVersion());
-        packaging.getParent().addElement("packaging", before(packaging)).addText(packaging.getName());
+        XmlElement project = packaging.getParent();
+        project.addElement("groupId", before(packaging)).addText(gav.getGroupId());
+        project.addElement("artifactId", before(packaging)).addText(gav.getArtifactId());
+        project.addElement("version", before(packaging)).addText(gav.getVersion());
+        if (gav.getClassifier() != null)
+            project.addElement("classifier", before(packaging)).addText(gav.getClassifier());
+        project.addElement("packaging", before(packaging)).addText(packaging.getName());
         packaging.remove();
     }
 

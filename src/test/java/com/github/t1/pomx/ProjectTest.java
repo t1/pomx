@@ -38,4 +38,22 @@ public class ProjectTest {
                 + "    <packaging>war</packaging>\n"
                 + "</project>\n");
     }
+
+    @Test
+    public void shouldExpandGACV() throws Exception {
+        ProjectObjectModel pom = ProjectObjectModel.from(XML
+                + "<project " + NAMESPACE + ">\n"
+                + "    <war>dummy-group:dummy-artifact:mac-os:1.2.3-SNAPSHOT</war>\n"
+                + "</project>\n");
+
+        assertThat(pom.asString()).isEqualTo(XML
+                + "<project " + NAMESPACE + ">\n"
+                + "    <modelVersion>4.0.0</modelVersion>\n"
+                + "    <groupId>dummy-group</groupId>\n"
+                + "    <artifactId>dummy-artifact</artifactId>\n"
+                + "    <version>1.2.3-SNAPSHOT</version>\n"
+                + "    <classifier>mac-os</classifier>\n"
+                + "    <packaging>war</packaging>\n"
+                + "</project>\n");
+    }
 }
