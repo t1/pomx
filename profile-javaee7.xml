@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<profile>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <if packaging="war">
+            <failOnMissingWebXml>false</failOnMissingWebXml>
+        </if>
+    </properties>
+
+    <build>
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <plugin id="org.apache.maven.plugins:maven-compiler-plugin@3.5.1">
+                <source>1.8</source>
+                <target>1.8</target>
+                <showDeprecation>true</showDeprecation>
+            </plugin>
+            <if packaging="war">
+                <plugin id="org.apache.maven.plugins:maven-war-plugin@3.0.0">
+                    <archive>
+                        <addMavenDescriptor>false</addMavenDescriptor>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
+                    </archive>
+                </plugin>
+            </if>
+            <plugin id="org.apache.maven.plugins:maven-failsafe-plugin@2.19.1">
+                <executions>
+                    <execution>
+                        <id>perform-it</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin id="org.apache.maven.plugins:maven-release-plugin@2.5.3"/>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <provided>
+            <jar>org.slf4j:slf4j-api@1.7.21</jar>
+            <jar>javax:javaee-api@7.0</jar>
+        </provided>
+    </dependencies>
+</profile>

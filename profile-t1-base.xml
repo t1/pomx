@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<profile>
+    <properties>
+        <jackson.version>2.7.5</jackson.version>
+    </properties>
+
+    <scm>
+        <developerConnection>scm:git:https://github.com/t1/deployer</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+    <licenses>
+        <license>
+            <name>Apache License 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <distributionManagement>
+        <repository>
+            <id>bintray-t1-javaee-helpers</id>
+            <name>t1-javaee-helpers</name>
+            <url>https://api.bintray.com/maven/t1/javaee-helpers/deployer/;publish=1</url>
+        </repository>
+    </distributionManagement>
+    <repositories>
+        <repository>
+            <id>central</id>
+            <name>bintray</name>
+            <url>http://jcenter.bintray.com</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <provided>
+            <jar>org.projectlombok:lombok@1.16.10</jar>
+            <jar>org.jetbrains:annotations@15.0</jar>
+            <jar>com.github.t1:test-tools@1.5.0</jar>
+        </provided>
+
+        <compile>
+            <jar>com.github.t1:problem-detail@1.0.2</jar>
+            <jar>com.github.t1:logging-interceptor@3.1.5</jar>
+            <if packaging="war">
+                <jar>com.fasterxml.jackson.core:jackson-databind@${jackson.version}</jar>
+                <jar>com.fasterxml.jackson.dataformat:jackson-dataformat-yaml@${jackson.version}</jar>
+            </if>
+        </compile>
+
+        <test>
+            <jar>org.mockito:mockito-core@2.2.15</jar>
+            <jar>org.assertj:assertj-core@3.5.2</jar>
+        </test>
+    </dependencies>
+</profile>

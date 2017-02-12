@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<profile>
+    <dependencyManagement>
+        <pom>org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-bom@2.2.4</pom>
+        <pom>org.jboss.arquillian:arquillian-bom@1.1.11.Final</pom>
+    </dependencyManagement>
+
+    <dependencies>
+        <test>
+            <!-- integration tests -->
+            <jar>org.jboss.arquillian.junit:arquillian-junit-container</jar>
+            <jar>org.arquillian.container:arquillian-container-chameleon@1.0.0.Alpha7</jar>
+        </test>
+    </dependencies>
+</profile>
