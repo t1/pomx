@@ -1,10 +1,14 @@
 package com.github.t1.pomx;
 
-import lombok.Value;
+import lombok.*;
 
-@Value
+@Getter
+@RequiredArgsConstructor
 class GAV {
-    String groupId, artifactId, classifier, version;
+    private final String groupId;
+    private final String artifactId;
+    private final String classifier;
+    private final String version;
 
     static GAV split(String expression) {
         String[] split = expression.split(":", 10);

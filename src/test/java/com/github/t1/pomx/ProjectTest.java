@@ -70,6 +70,31 @@ public class ProjectTest {
     }
 
     @Test
+    public void shouldFailToExpandGavWithOneItem() throws Exception {
+        Throwable throwable = catchThrowable(() -> ProjectObjectModel
+                .from(XML
+                        + "<project " + NAMESPACE + ">\n"
+                        + "    <war>dummy-group</war>\n"
+                        + "</project>\n")
+                .asString());
+
+        assertThat(throwable).hasMessageContaining("too few elements 1 in GAV expression: 'dummy-group'");
+    }
+
+    @Test
+    public void shouldFailToExpandGavWithTwoItems() throws Exception {
+        Throwable throwable = catchThrowable(() -> ProjectObjectModel
+                .from(XML
+                        + "<project " + NAMESPACE + ">\n"
+                        + "    <war>dummy-group:dummy-artifact</war>\n"
+                        + "</project>\n")
+                .asString());
+
+        assertThat(throwable).hasMessageContaining(
+                "too few elements 2 in GAV expression: 'dummy-group:dummy-artifact'");
+    }
+
+    @Test
     public void shouldExpandGACV() throws Exception {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
                 + "<project " + NAMESPACE + ">\n"
@@ -86,6 +111,20 @@ public class ProjectTest {
                 + "    <packaging>war</packaging>\n"
                 + "</project>\n");
     }
+
+    @Test
+    public void shouldFailToExpandGavWithFiveItems() throws Exception {
+        Throwable throwable = catchThrowable(() -> ProjectObjectModel
+                .from(XML
+                        + "<project " + NAMESPACE + ">\n"
+                        + "    <war>dummy-group:dummy-artifact:mac-os:1.2.3-SNAPSHOT:too-much</war>\n"
+                        + "</project>\n")
+                .asString());
+
+        assertThat(throwable).hasMessageContaining(
+                "too many elements 5 in GAV expression: 'dummy-group:dummy-artifact:mac-os:1.2.3-SNAPSHOT:too-much'");
+    }
+
 
     @Test
     public void shouldExpandDepencencyManagement() throws Exception {
