@@ -34,6 +34,7 @@ class ProjectObjectModel {
         expandModelVersion();
         expandGav();
         expandDependencyManagement();
+        expandDependencies();
     }
 
     private void expandModelVersion() {
@@ -72,5 +73,23 @@ class ProjectObjectModel {
                        element.addElement("type").addText(dependency.getName());
                        dependency.remove();
                    }));
+    }
+
+    private void expandDependencies() {
+        out.getOptionalElement("dependencies")
+           .ifPresent(dependencies ->
+                   out.find("/project/dependencies/*")
+                      .forEach(scope -> {
+                          scope.find("jar")
+                               .forEach(dependency -> {
+                                   GAV gav = GAV.split(dependency.getText());
+                                   XmlElement element = dependencies.addElement("dependency", before(scope));
+                                   element.addElement("groupId").addText(gav.getGroupId());
+                                   element.addElement("artifactId").addText(gav.getArtifactId());
+                                   element.addElement("version").addText(gav.getVersion());
+                                   element.addElement("scope").addText(scope.getName());
+                               });
+                          scope.remove();
+                      }));
     }
 }

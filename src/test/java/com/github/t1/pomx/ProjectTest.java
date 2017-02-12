@@ -127,7 +127,7 @@ public class ProjectTest {
 
 
     @Test
-    public void shouldExpandDepencencyManagement() throws Exception {
+    public void shouldExpandDependencyManagement() throws Exception {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
                 + "<project " + NAMESPACE + ">\n"
                 + "    <dependencyManagement>\n"
@@ -136,7 +136,6 @@ public class ProjectTest {
                 + "        </dependencies>\n"
                 + "    </dependencyManagement>\n"
                 + "</project>\n");
-
 
         assertThat(pom.asString()).isEqualTo(XML
                 + "<project " + NAMESPACE + ">\n"
@@ -152,6 +151,134 @@ public class ProjectTest {
                 + "        </dependency>\n"
                 + "        </dependencies>\n"
                 + "    </dependencyManagement>\n"
+                + "</project>\n");
+    }
+
+    @Test
+    public void shouldExpandTwoDependencyManagements() throws Exception {
+        ProjectObjectModel pom = ProjectObjectModel.from(XML
+                + "<project " + NAMESPACE + ">\n"
+                + "    <dependencyManagement>\n"
+                + "        <dependencies>\n"
+                + "            <pom>org.jboss.arquillian:arquillian-bom:1.1.11.Final</pom>\n"
+                + "            <pom>org.jboss.foo:foo-bom:1.2.3</pom>\n"
+                + "        </dependencies>\n"
+                + "    </dependencyManagement>\n"
+                + "</project>\n");
+
+        assertThat(pom.asString()).isEqualTo(XML
+                + "<project " + NAMESPACE + ">\n"
+                + "    <modelVersion>4.0.0</modelVersion>\n"
+                + "    <dependencyManagement>\n"
+                + "        <dependencies>\n"
+                + "            <dependency>\n"
+                + "            <groupId>org.jboss.arquillian</groupId>\n"
+                + "            <artifactId>arquillian-bom</artifactId>\n"
+                + "            <version>1.1.11.Final</version>\n"
+                + "            <scope>import</scope>\n"
+                + "            <type>pom</type>\n"
+                + "        </dependency>\n"
+                + "            <dependency>\n"
+                + "            <groupId>org.jboss.foo</groupId>\n"
+                + "            <artifactId>foo-bom</artifactId>\n"
+                + "            <version>1.2.3</version>\n"
+                + "            <scope>import</scope>\n"
+                + "            <type>pom</type>\n"
+                + "        </dependency>\n"
+                + "        </dependencies>\n"
+                + "    </dependencyManagement>\n"
+                + "</project>\n");
+    }
+
+
+    @Test
+    public void shouldExpandTestDependency() throws Exception {
+        ProjectObjectModel pom = ProjectObjectModel.from(XML
+                + "<project " + NAMESPACE + ">\n"
+                + "    <dependencies>\n"
+                + "        <test>\n"
+                + "            <jar>junit:junit:4.12</jar>\n"
+                + "        </test>\n"
+                + "    </dependencies>\n"
+                + "</project>\n");
+
+        assertThat(pom.asString()).isEqualTo(XML
+                + "<project " + NAMESPACE + ">\n"
+                + "    <modelVersion>4.0.0</modelVersion>\n"
+                + "    <dependencies>\n"
+                + "        <dependency>\n"
+                + "        <groupId>junit</groupId>\n"
+                + "        <artifactId>junit</artifactId>\n"
+                + "        <version>4.12</version>\n"
+                + "        <scope>test</scope>\n"
+                + "    </dependency>\n"
+                + "    </dependencies>\n"
+                + "</project>\n");
+    }
+
+    @Test
+    public void shouldExpandTwoTestDependencies() throws Exception {
+        ProjectObjectModel pom = ProjectObjectModel.from(XML
+                + "<project " + NAMESPACE + ">\n"
+                + "    <dependencies>\n"
+                + "        <test>\n"
+                + "            <jar>junit:junit:4.12</jar>\n"
+                + "            <jar>org.assertj:assertj-core:3.6.1</jar>\n"
+                + "        </test>\n"
+                + "    </dependencies>\n"
+                + "</project>\n");
+
+        assertThat(pom.asString()).isEqualTo(XML
+                + "<project " + NAMESPACE + ">\n"
+                + "    <modelVersion>4.0.0</modelVersion>\n"
+                + "    <dependencies>\n"
+                + "        <dependency>\n"
+                + "        <groupId>junit</groupId>\n"
+                + "        <artifactId>junit</artifactId>\n"
+                + "        <version>4.12</version>\n"
+                + "        <scope>test</scope>\n"
+                + "    </dependency>\n"
+                + "    <dependency>\n"
+                + "        <groupId>org.assertj</groupId>\n"
+                + "        <artifactId>assertj-core</artifactId>\n"
+                + "        <version>3.6.1</version>\n"
+                + "        <scope>test</scope>\n"
+                + "    </dependency>\n"
+                + "    </dependencies>\n"
+                + "</project>\n");
+    }
+
+    @Test
+    public void shouldExpandTwoScopeDependencies() throws Exception {
+        ProjectObjectModel pom = ProjectObjectModel.from(XML
+                + "<project " + NAMESPACE + ">\n"
+                + "    <dependencies>\n"
+                + "        <provided>\n"
+                + "            <jar>org.projectlombok:lombok:1.16.12</jar>\n"
+                + "        </provided>\n"
+                + "        <test>\n"
+                + "            <jar>org.assertj:assertj-core:3.6.1</jar>\n"
+                + "        </test>\n"
+                + "    </dependencies>\n"
+                + "</project>\n");
+
+        assertThat(pom.asString()).isEqualTo(XML
+                + "<project " + NAMESPACE + ">\n"
+                + "    <modelVersion>4.0.0</modelVersion>\n"
+                + "    <dependencies>\n"
+                + "        <dependency>\n"
+                + "        <groupId>org.projectlombok</groupId>\n"
+                + "        <artifactId>lombok</artifactId>\n"
+                + "        <version>1.16.12</version>\n"
+                + "        <scope>provided</scope>\n"
+                + "    </dependency>\n"
+                + "        <dependency>\n"
+                + "        <groupId>org.assertj</groupId>\n"
+                + "        <artifactId>assertj-core</artifactId>\n"
+                + "        <version>3.6.1</version>\n"
+                + "        <scope>test</scope>\n"
+                + "    </dependency>\n"
+                + "    </dependencies>\n"
                 + "</project>\n");
     }
 }
