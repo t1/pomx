@@ -5,7 +5,7 @@ import com.github.t1.xml.XmlElement;
 import lombok.RequiredArgsConstructor;
 
 import java.nio.file.Path;
-import java.util.List;
+import java.util.*;
 
 import static com.github.t1.xml.XmlElement.*;
 
@@ -38,7 +38,9 @@ class ProjectObjectModel {
     }
 
     private void expandModelVersion() {
-        out.addElement("modelVersion", atBegin()).addText("4.0.0");
+        Optional<XmlElement> optional = out.getOptionalElement("modelVersion");
+        if (!optional.isPresent())
+            out.addElement("modelVersion", atBegin()).addText("4.0.0");
     }
 
     private void expandGav() {

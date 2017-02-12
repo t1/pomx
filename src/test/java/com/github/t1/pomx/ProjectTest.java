@@ -23,6 +23,19 @@ public class ProjectTest {
     }
 
     @Test
+    public void shouldNotAddModelVersionIfAlreadyThere() throws Exception {
+        ProjectObjectModel pom = ProjectObjectModel.from(XML
+                + "<project " + NAMESPACE + ">\n"
+                + "    <modelVersion>4.0.0</modelVersion>\n"
+                + "</project>\n");
+
+        assertThat(pom.asString()).isEqualTo(XML
+                + "<project " + NAMESPACE + ">\n"
+                + "    <modelVersion>4.0.0</modelVersion>\n"
+                + "</project>\n");
+    }
+
+    @Test
     public void shouldExpandJarGAV() throws Exception {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
                 + "<project " + NAMESPACE + ">\n"
