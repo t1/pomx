@@ -1,3 +1,48 @@
+# Xml Is Not The Problem
+
+There's a lot of complaining about [Maven](http://maven.apache.org) being too verbose.
+The Maven developers listened and started [Polyglot Maven](https://github.com/takari/polyglot-maven/tree/master/polyglot-xml)
+to address the issue.
+They support Groovy, Scala, Ruby, Yaml or other file formats, and they may be beneficial to some people,
+but I don't think that XML is the problem, so those other file formats are not guaranteed to be a cure.
+
+XML requires you to repeat the name of the opening tag when closing it, okay.
+This actually does add a bit of verbosity, but it's also quite useful to orient in large blocks.
+XML also supports attributes, which Maven POM files just never use, so instead of expressing a dependency like this:
+
+```xml
+<dependency>
+    <groupId>ch.qos.logback</groupId>
+    <artifactId>logback-classic</artifactId>
+    <version>1.2.1</version>
+</dependency>
+```
+
+We could use attributes:
+
+```xml
+<dependency groupId="ch.qos.logback" artifactId="logback-classic" version="1.2.1"/>
+```
+
+The Polyglot project has an XML format that goes exactly this way.
+The other file formats use an even more compact format by simply separating these fields with colons.
+In XML this could look like this:
+
+```xml
+<dependency>ch.qos.logback:logback-classic:1.2.1</dependency>
+```
+
+But while this makes the syntax more concise, the real benefit other languages can provide (if used properly),
+is to reduce the repetition in you build files.
+By leveraging reuse, build files don't just get more concise, they also get more uniform and more to-the-point.
+I.e. if you want e.g. a Java EE 7 WAR, you should only specify that this is what you want,
+and the know-how required to build it, is expressed once-and-only-once in a repository.
+
+Xml is not the problem.
+
+
+## Features
+
 ### Include `modelVersion`
 
 old:
