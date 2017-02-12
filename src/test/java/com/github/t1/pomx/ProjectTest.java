@@ -23,7 +23,24 @@ public class ProjectTest {
     }
 
     @Test
-    public void shouldExpandGAV() throws Exception {
+    public void shouldExpandJarGAV() throws Exception {
+        ProjectObjectModel pom = ProjectObjectModel.from(XML
+                + "<project " + NAMESPACE + ">\n"
+                + "    <jar>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</jar>\n"
+                + "</project>\n");
+
+        assertThat(pom.asString()).isEqualTo(XML
+                + "<project " + NAMESPACE + ">\n"
+                + "    <modelVersion>4.0.0</modelVersion>\n"
+                + "    <groupId>dummy-group</groupId>\n"
+                + "    <artifactId>dummy-artifact</artifactId>\n"
+                + "    <version>1.2.3-SNAPSHOT</version>\n"
+                + "    <packaging>jar</packaging>\n"
+                + "</project>\n");
+    }
+
+    @Test
+    public void shouldExpandWarGAV() throws Exception {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
                 + "<project " + NAMESPACE + ">\n"
                 + "    <war>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</war>\n"
@@ -37,6 +54,19 @@ public class ProjectTest {
                 + "    <version>1.2.3-SNAPSHOT</version>\n"
                 + "    <packaging>war</packaging>\n"
                 + "</project>\n");
+    }
+
+    @Test
+    public void shouldFailToExpandMultipleGAV() throws Exception {
+        Throwable throwable = catchThrowable(() -> ProjectObjectModel
+                .from(XML
+                        + "<project " + NAMESPACE + ">\n"
+                        + "    <war>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</war>\n"
+                        + "    <war>dummy-group2:dummy-artifact2:1.2.3-SNAPSHOT</war>\n"
+                        + "</project>\n")
+                .asString());
+
+        assertThat(throwable).hasMessageContaining("multiple packagings found");
     }
 
     @Test
@@ -54,6 +84,35 @@ public class ProjectTest {
                 + "    <version>1.2.3-SNAPSHOT</version>\n"
                 + "    <classifier>mac-os</classifier>\n"
                 + "    <packaging>war</packaging>\n"
+                + "</project>\n");
+    }
+
+    @Test
+    public void shouldExpandDepencencyManagement() throws Exception {
+        ProjectObjectModel pom = ProjectObjectModel.from(XML
+                + "<project " + NAMESPACE + ">\n"
+                + "    <dependencyManagement>\n"
+                + "        <dependencies>\n"
+                + "            <pom>org.jboss.arquillian:arquillian-bom:1.1.11.Final</pom>\n"
+                + "        </dependencies>\n"
+                + "    </dependencyManagement>\n"
+                + "</project>\n");
+
+
+        assertThat(pom.asString()).isEqualTo(XML
+                + "<project " + NAMESPACE + ">\n"
+                + "    <modelVersion>4.0.0</modelVersion>\n"
+                + "    <dependencyManagement>\n"
+                + "        <dependencies>\n"
+                + "            <dependency>\n"
+                + "            <groupId>org.jboss.arquillian</groupId>\n"
+                + "            <artifactId>arquillian-bom</artifactId>\n"
+                + "            <version>1.1.11.Final</version>\n"
+                + "            <scope>import</scope>\n"
+                + "            <type>pom</type>\n"
+                + "        </dependency>\n"
+                + "        </dependencies>\n"
+                + "    </dependencyManagement>\n"
                 + "</project>\n");
     }
 }

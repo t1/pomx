@@ -2,13 +2,12 @@ package com.github.t1.pomx;
 
 import com.github.t1.xml.*;
 import com.github.t1.xml.XmlElement;
-import lombok.*;
+import lombok.RequiredArgsConstructor;
 
 import java.nio.file.Path;
 import java.util.List;
 
 import static com.github.t1.xml.XmlElement.*;
-import static java.util.stream.Collectors.*;
 
 @RequiredArgsConstructor
 class ProjectObjectModel {
@@ -26,10 +25,15 @@ class ProjectObjectModel {
     private Xml converted() {
         if (out == null) {
             out = Xml.fromString(in.toXmlString());
-            expandModelVersion();
-            expandGav();
+            expand();
         }
         return out;
+    }
+
+    private void expand() {
+        expandModelVersion();
+        expandGav();
+        expandDependencyManagement();
     }
 
     private void expandModelVersion() {
@@ -37,11 +41,11 @@ class ProjectObjectModel {
     }
 
     private void expandGav() {
-        List<XmlElement> packagings = out.elements().stream()
-                                         .filter(element -> element.getName().equals("war"))
-                                         .collect(toList());
+        List<XmlElement> packagings = out.find("/project/*[local-name()='war' or local-name()='jar']");
         if (packagings.isEmpty())
             return;
+        if (packagings.size() > 1)
+            throw new RuntimeException("multiple packagings found");
         XmlElement packaging = packagings.get(0);
         GAV gav = GAV.split(packaging.getText());
         XmlElement project = packaging.getParent();
@@ -54,26 +58,19 @@ class ProjectObjectModel {
         packaging.remove();
     }
 
-    @Value
-    private static class GAV {
-        String groupId, artifactId, classifier, version;
-
-        private static GAV split(String expression) {
-            String[] split = expression.split(":", 10);
-            switch (split.length) {
-            case 0:
-            case 1:
-            case 2:
-                throw new IllegalArgumentException(
-                        "too few elements " + split.length + " in GAV expression: '" + expression + "'");
-            case 3:
-                return new GAV(split[0], split[1], null, split[2]);
-            case 4:
-                return new GAV(split[0], split[1], split[2], split[3]);
-            default:
-                throw new IllegalArgumentException(
-                        "too many elements " + split.length + " in GAV expression: '" + expression + "'");
-            }
-        }
+    private void expandDependencyManagement() {
+        out.find("/project/dependencyManagement/dependencies")
+           .forEach(dependencies -> dependencies
+                   .find("pom")
+                   .forEach(dependency -> {
+                       GAV gav = GAV.split(dependency.getText());
+                       XmlElement element = dependencies.addElement("dependency", before(dependency));
+                       element.addElement("groupId").addText(gav.getGroupId());
+                       element.addElement("artifactId").addText(gav.getArtifactId());
+                       element.addElement("version").addText(gav.getVersion());
+                       element.addElement("scope").addText("import");
+                       element.addElement("type").addText(dependency.getName());
+                       dependency.remove();
+                   }));
     }
 }
