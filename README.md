@@ -6,9 +6,11 @@ to address the issue.
 They support Groovy, Scala, Ruby, Yaml or other file formats, and they may be beneficial to some people,
 but I don't think that XML is the problem, so those other file formats are not guaranteed to be a cure.
 
-XML requires you to repeat the name of the opening tag when closing it, okay.
+XML has reputation for being verbose, because requires you to repeat the name of the opening tag when closing it.
 This actually does add a bit of verbosity, but it's also quite useful to orient in large blocks.
-XML also supports attributes, which Maven POM files just never use, so instead of expressing a dependency like this:
+XML also supports attributes, which require less overhead than JSON!
+Maven POM files just never use them.
+Instead of expressing a dependency like this:
 
 ```xml
 <dependency>
@@ -18,27 +20,38 @@ XML also supports attributes, which Maven POM files just never use, so instead o
 </dependency>
 ```
 
-We could use attributes:
+A POM could use attributes like this:
 
 ```xml
 <dependency groupId="ch.qos.logback" artifactId="logback-classic" version="1.2.1"/>
 ```
 
 The Polyglot project has an XML format that goes exactly this way.
-The other file formats use an even more compact format by simply separating these fields with colons.
+The other file formats use an even more compact format by simply separating the GAV fields with colons.
 In XML this could look like this:
 
 ```xml
 <dependency>ch.qos.logback:logback-classic:1.2.1</dependency>
 ```
 
-But while this makes the syntax more concise, the real benefit other languages can provide (if used properly),
+While this makes the syntax more concise, the real benefit other languages _can_ provide (if used properly),
 is to reduce the repetition in you build files.
-By leveraging reuse, build files don't just get more concise, they also get more uniform and more to-the-point.
+By leveraging reuse, build files don't just get more concise, they also get more uniform and more expressive.
 I.e. if you want e.g. a Java EE 7 WAR, you should only specify that this is what you want,
-and the know-how required to build it, is expressed once-and-only-once in a repository.
+and the know-how required to build it, the dependencies, the Java compiler setting, the properties, etc.
+is expressed once-and-only-once in a file in the repository. We can do that with XML.
+In this project, I do so by allowing profiles to be defined in Maven repository files.
 
 Xml is not the problem.
+
+
+## Setup
+
+I took a look at the code of the Polyglot project, but I absolutely need a classic POM to be generated
+for other tools to work correctly; Polyglot still works on this.
+And my code is much smaller and easier to understand.
+
+I think I should make it a Maven extension, and I still need to write an XSD.
 
 
 ## Features
@@ -141,7 +154,7 @@ new:
 ```
 
 
-### External Profiles
+### External Profiles (TODO)
 
 Profiles can be stored in a repository
 
@@ -150,7 +163,7 @@ Profiles can be stored in a repository
 ```
 
 
-### Conditions
+### Conditions (TODO)
 
 Some parts can be switched on a condition (similar to profile activation):
 

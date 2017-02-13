@@ -2,6 +2,9 @@ package com.github.t1.pomx;
 
 import org.junit.Test;
 
+import java.io.File;
+import java.nio.file.Paths;
+
 import static org.assertj.core.api.Assertions.*;
 
 public class ProjectTest {
@@ -9,6 +12,14 @@ public class ProjectTest {
     private static final String NAMESPACE =
             "xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""
                     + " xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\"";
+
+
+    @Test
+    public void shouldLoadRealPom() throws Exception {
+        ProjectObjectModel pom = ProjectObjectModel.readFrom(Paths.get("pom.xml"));
+
+        assertThat(pom.asString()).isEqualTo(contentOf(new File("pom.xml")).replace("\" ?>", "\"?>"));
+    }
 
     @Test
     public void shouldAddModelVersion() throws Exception {

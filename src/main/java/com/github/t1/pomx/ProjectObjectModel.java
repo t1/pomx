@@ -8,9 +8,12 @@ import java.nio.file.Path;
 import java.util.*;
 
 import static com.github.t1.xml.XmlElement.*;
+import static java.util.Arrays.*;
 
 @RequiredArgsConstructor
 class ProjectObjectModel {
+    private static final List<String> SCOPES = asList("provided", "compile", "runtime", "system", "test");
+
     static ProjectObjectModel from(String xml) { return new ProjectObjectModel(Xml.fromString(xml)); }
 
     static ProjectObjectModel readFrom(Path path) { return new ProjectObjectModel(Xml.load(path.toUri())); }
@@ -81,6 +84,8 @@ class ProjectObjectModel {
         out.getOptionalElement("dependencies")
            .ifPresent(dependencies ->
                    out.find("/project/dependencies/*")
+                      .stream()
+                      .filter(scope -> SCOPES.contains(scope.getName()))
                       .forEach(scope -> {
                           scope.find("jar")
                                .forEach(dependency -> {

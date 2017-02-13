@@ -1,38 +1,31 @@
 package com.github.t1.pomx;
 
-import com.github.t1.testtools.SystemOutCaptorRule;
-import org.junit.*;
+import org.junit.Test;
 
-import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
+import static java.util.Arrays.*;
 import static org.assertj.core.api.Assertions.*;
 
 public class MainTest {
-    @Rule public SystemOutCaptorRule system = new SystemOutCaptorRule();
-
     @Test
-    public void shouldShowHelp() {
-        Main.main("--help");
-
-        assertThat(system.out()).isEqualTo(""
-                + "Usage: com.github.t1.pomx.Main [options]\n"
-                + "  Options:\n"
-                + "    -h, --help\n"
-                + "      Show usage and exit\n"
-                + "      Default: false");
+    public void shouldRunMaven() throws Exception {
+        Main.main("-version");
     }
 
     @Test
-    public void shouldRun() throws Exception {
-        Main.main("");
+    public void shouldPassParamsToMaven() throws Exception {
+        AtomicReference<List<String>> passed = new AtomicReference<>();
+        Main main = new Main(new ArrayList<>(asList("x", "y"))) {
+            @Override void runMaven(List<String> args) {
+                passed.set(args);
+            }
+        };
 
-        assertThat(system.out()).isEqualTo("run");
-    }
+        main.run();
 
-    @Test
-    public void shouldLoadRealPom() throws Exception {
-        ProjectObjectModel pom = ProjectObjectModel.readFrom(Paths.get("pom.xml"));
-
-        assertThat(pom).isNotNull();
+        assertThat(passed.get()).containsExactly("mvn", "x", "y");
     }
 }
