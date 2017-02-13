@@ -14,6 +14,17 @@
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
+            <plugin id="org.apache.maven.plugins:maven-compiler-plugin:3.1">
+                <configuration>
+                    <source>${java.specification.version}</source>
+                    <target>${java.specification.version}</target>
+                    <showWarnings>true</showWarnings>
+                    <showDeprecation>true</showDeprecation>
+                    <encoding>utf8</encoding>
+                    <fork>true</fork>
+                    <compilerArgument>-parameters</compilerArgument>
+                </configuration>
+            </plugin>
             <plugin id="org.apache.maven.plugins:maven-jar-plugin:2.4">
                 <configuration>
                     <archive>
@@ -38,17 +49,6 @@
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                 </configuration>
             </plugin>
-            <plugin id="org.apache.maven.plugins:maven-compiler-plugin:3.1">
-                <configuration>
-                    <source>${java.specification.version}</source>
-                    <target>${java.specification.version}</target>
-                    <showWarnings>true</showWarnings>
-                    <showDeprecation>true</showDeprecation>
-                    <encoding>utf8</encoding>
-                    <fork>true</fork>
-                    <compilerArgument>-parameters</compilerArgument>
-                </configuration>
-            </plugin>
             <plugin id="org.apache.maven.plugins:maven-javadoc-plugin:2.9.1"/>
             <plugin id="org.pitest:pitest-maven:1.1.11">
                 <configuration>
@@ -60,7 +60,7 @@
 
     <dependencies>
         <provided>
-            <jar>org.projectlombok:lombok:1.16.12</jar>
+            <jar>org.projectlombok:lombok:1.16.14</jar>
         </provided>
 
         <compile>
@@ -69,8 +69,8 @@
 
         <test>
             <jar>junit:junit:4.12</jar>
-            <jar>com.github.t1:test-tools:1.4.1</jar>
-            <jar>org.assertj:assertj-core:3.6.1</jar>
+            <jar>com.github.t1:test-tools:1.5.0</jar>
+            <jar>org.assertj:assertj-core:3.6.2</jar>
         </test>
     </dependencies>
 </project>
