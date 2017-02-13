@@ -2,12 +2,14 @@ package com.github.t1.pomx;
 
 import com.github.t1.xml.*;
 import com.github.t1.xml.XmlElement;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
-import java.nio.file.Path;
+import java.io.IOException;
+import java.nio.file.*;
 import java.util.*;
 
 import static com.github.t1.xml.XmlElement.*;
+import static java.nio.charset.StandardCharsets.*;
 import static java.util.Arrays.*;
 
 @RequiredArgsConstructor
@@ -98,5 +100,10 @@ class ProjectObjectModel {
                                });
                           scope.remove();
                       }));
+    }
+
+    @SneakyThrows(IOException.class)
+    void writeTo(Path path) {
+        Files.write(path, asString().getBytes(UTF_8));
     }
 }
