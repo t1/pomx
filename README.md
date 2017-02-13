@@ -96,6 +96,36 @@ schema: `<packaging>groupId:artifactId:version</packaging>`
 or: `<packaging>groupId:artifactId:classifier:version</packaging>`
 
 
+### Compact GAV of Build Plugins
+
+old:
+
+```xml
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-jar-plugin</artifactId>
+    <version>2.4</version>
+    <configuration>
+        <archive>
+            <addMavenDescriptor>false</addMavenDescriptor>
+        </archive>
+    </configuration>
+</plugin>
+```
+
+new:
+
+```xml
+<plugin id="org.apache.maven.plugins:maven-jar-plugin:2.4">
+    <configuration>
+        <archive>
+            <addMavenDescriptor>false</addMavenDescriptor>
+        </archive>
+    </configuration>
+</plugin>
+```
+
+
 ### Compact Dependency Management
 
 old:

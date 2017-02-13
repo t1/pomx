@@ -7,7 +7,7 @@ import java.nio.file.Paths;
 
 import static org.assertj.core.api.Assertions.*;
 
-public class ProjectTest {
+public class ProjectObjectModelTest {
     private static final String XML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
     private static final String NAMESPACE =
             "xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""
@@ -151,6 +151,44 @@ public class ProjectTest {
 
 
     @Test
+    public void shouldExpandBuildPlugin() throws Exception {
+        ProjectObjectModel pom = ProjectObjectModel.from(XML
+                + "<project " + NAMESPACE + ">\n"
+                + "    <build>\n"
+                + "        <plugins>\n"
+                + "            <plugin id=\"org.apache.maven.plugins:maven-jar-plugin:2.4\">\n"
+                + "                <configuration>\n"
+                + "                    <archive>\n"
+                + "                        <addMavenDescriptor>false</addMavenDescriptor>\n"
+                + "                    </archive>\n"
+                + "                </configuration>\n"
+                + "            </plugin>\n"
+                + "        </plugins>\n"
+                + "    </build>\n"
+                + "</project>\n");
+
+        assertThat(pom.asString()).isEqualTo(XML
+                + "<project " + NAMESPACE + ">\n"
+                + "    <modelVersion>4.0.0</modelVersion>\n"
+                + "    <build>\n"
+                + "        <plugins>\n"
+                + "            <plugin>\n"
+                + "                <groupId>org.apache.maven.plugins</groupId>\n"
+                + "            <artifactId>maven-jar-plugin</artifactId>\n"
+                + "            <version>2.4</version>\n"
+                + "            <configuration>\n"
+                + "                    <archive>\n"
+                + "                        <addMavenDescriptor>false</addMavenDescriptor>\n"
+                + "                    </archive>\n"
+                + "                </configuration>\n"
+                + "            </plugin>\n"
+                + "        </plugins>\n"
+                + "    </build>\n"
+                + "</project>\n");
+    }
+
+
+    @Test
     public void shouldExpandDependencyManagement() throws Exception {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
                 + "<project " + NAMESPACE + ">\n"
@@ -170,42 +208,6 @@ public class ProjectTest {
                 + "            <groupId>org.jboss.arquillian</groupId>\n"
                 + "            <artifactId>arquillian-bom</artifactId>\n"
                 + "            <version>1.1.11.Final</version>\n"
-                + "            <scope>import</scope>\n"
-                + "            <type>pom</type>\n"
-                + "        </dependency>\n"
-                + "        </dependencies>\n"
-                + "    </dependencyManagement>\n"
-                + "</project>\n");
-    }
-
-    @Test
-    public void shouldExpandTwoDependencyManagements() throws Exception {
-        ProjectObjectModel pom = ProjectObjectModel.from(XML
-                + "<project " + NAMESPACE + ">\n"
-                + "    <dependencyManagement>\n"
-                + "        <dependencies>\n"
-                + "            <pom>org.jboss.arquillian:arquillian-bom:1.1.11.Final</pom>\n"
-                + "            <pom>org.jboss.foo:foo-bom:1.2.3</pom>\n"
-                + "        </dependencies>\n"
-                + "    </dependencyManagement>\n"
-                + "</project>\n");
-
-        assertThat(pom.asString()).isEqualTo(XML
-                + "<project " + NAMESPACE + ">\n"
-                + "    <modelVersion>4.0.0</modelVersion>\n"
-                + "    <dependencyManagement>\n"
-                + "        <dependencies>\n"
-                + "            <dependency>\n"
-                + "            <groupId>org.jboss.arquillian</groupId>\n"
-                + "            <artifactId>arquillian-bom</artifactId>\n"
-                + "            <version>1.1.11.Final</version>\n"
-                + "            <scope>import</scope>\n"
-                + "            <type>pom</type>\n"
-                + "        </dependency>\n"
-                + "            <dependency>\n"
-                + "            <groupId>org.jboss.foo</groupId>\n"
-                + "            <artifactId>foo-bom</artifactId>\n"
-                + "            <version>1.2.3</version>\n"
                 + "            <scope>import</scope>\n"
                 + "            <type>pom</type>\n"
                 + "        </dependency>\n"

@@ -38,6 +38,7 @@ class ProjectObjectModel {
     private void expand() {
         expandModelVersion();
         expandGav();
+        expandBuildPlugins();
         expandDependencyManagement();
         expandDependencies();
     }
@@ -46,6 +47,21 @@ class ProjectObjectModel {
         Optional<XmlElement> optional = out.getOptionalElement("modelVersion");
         if (!optional.isPresent())
             out.addElement("modelVersion", atBegin()).addText("4.0.0");
+    }
+
+    private void expandBuildPlugins() {
+        out.find("/project/build/plugins")
+           .forEach(plugins -> plugins
+                   .find("plugin")
+                   .forEach(plugin -> {
+                       if (plugin.hasAttribute("id")) {
+                           GAV gav = GAV.split(plugin.getAttribute("id"));
+                           plugin.addElement("version", atBegin()).addText(gav.getVersion());
+                           plugin.addElement("artifactId", atBegin()).addText(gav.getArtifactId());
+                           plugin.addElement("groupId", atBegin()).addText(gav.getGroupId());
+                           plugin.removeAttribute("id");
+                       }
+                   }));
     }
 
     private void expandGav() {

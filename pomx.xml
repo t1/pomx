@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<project xmlns="http://maven.apache.org/POM/4.0.0">
+<project xmlns="http://maven.apache.org/POMX/5.0.0">
     <jar>com.github.t1:pomx:0.0.1-SNAPSHOT</jar>
     <name>POM-X</name>
     <description>Extended Maven POM file format</description>
@@ -14,10 +14,7 @@
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.4</version>
+            <plugin id="org.apache.maven.plugins:maven-jar-plugin:2.4">
                 <configuration>
                     <archive>
                         <addMavenDescriptor>false</addMavenDescriptor>
@@ -28,10 +25,7 @@
                     </archive>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>2.3</version>
+            <plugin id="org.apache.maven.plugins:maven-shade-plugin:2.3">
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -44,10 +38,7 @@
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
+            <plugin id="org.apache.maven.plugins:maven-compiler-plugin:3.1">
                 <configuration>
                     <source>${java.specification.version}</source>
                     <target>${java.specification.version}</target>
@@ -58,15 +49,8 @@
                     <compilerArgument>-parameters</compilerArgument>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.9.1</version>
-            </plugin>
-            <plugin>
-                <groupId>org.pitest</groupId>
-                <artifactId>pitest-maven</artifactId>
-                <version>1.1.11</version>
+            <plugin id="org.apache.maven.plugins:maven-javadoc-plugin:2.9.1"/>
+            <plugin id="org.pitest:pitest-maven:1.1.11">
                 <configuration>
                     <timestampedReports>false</timestampedReports>
                 </configuration>
