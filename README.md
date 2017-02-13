@@ -51,7 +51,9 @@ I took a look at the code of the Polyglot project, but I absolutely need a class
 for other tools to work correctly; Polyglot still works on this.
 And my code is much smaller and easier to understand.
 
-I think I should make it a Maven extension, and I still need to write an XSD.
+The XSD is boldly named `http://maven.apache.org/POM/5.0.0`.
+
+And I think I should make it a Maven extension.
 
 
 ## Features
@@ -80,10 +82,12 @@ new:
 old:
 
 ```xml
-<groupId>com.github.t1</groupId>
-<artifactId>deployer</artifactId>
-<version>2.7.3-SNAPSHOT</version>
-<packaging>war</packaging>
+<project>
+    <groupId>com.github.t1</groupId>
+    <artifactId>deployer</artifactId>
+    <version>2.7.3-SNAPSHOT</version>
+    <packaging>war</packaging>
+</project>
 ```
 
 new:
