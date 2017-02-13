@@ -294,6 +294,41 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element name="dependency" minOccurs="0" maxOccurs="unbounded" type="Dependency"/>
+                        <xs:element name="provided" minOccurs="0" maxOccurs="1" type="xs:complexType">
+                            <xs:annotation>
+                                <xs:documentation source="version">5.0.0</xs:documentation>
+                                <xs:documentation source="description">The dependencies of `provided` scope
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="compile" minOccurs="0" maxOccurs="1" type="xs:complexType">
+                            <xs:annotation>
+                                <xs:documentation source="version">5.0.0</xs:documentation>
+                                <xs:documentation source="description">The dependencies of `compile` scope
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="runtime" minOccurs="0" maxOccurs="1" type="xs:complexType">
+                            <xs:annotation>
+                                <xs:documentation source="version">5.0.0</xs:documentation>
+                                <xs:documentation source="description">The dependencies of `runtime` scope
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="system" minOccurs="0" maxOccurs="1" type="xs:complexType">
+                            <xs:annotation>
+                                <xs:documentation source="version">5.0.0</xs:documentation>
+                                <xs:documentation source="description">The dependencies of `system` scope
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="test" minOccurs="0" maxOccurs="1" type="xs:complexType">
+                            <xs:annotation>
+                                <xs:documentation source="version">5.0.0</xs:documentation>
+                                <xs:documentation source="description">The dependencies of `test` scope
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
