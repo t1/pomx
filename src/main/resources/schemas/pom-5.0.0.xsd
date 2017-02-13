@@ -29,6 +29,18 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
+            <xs:element name="jar" minOccurs="0" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation source="version">4.0.0</xs:documentation>
+                    <xs:documentation source="description">The GAV coordinates for a 'jar' packaging.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="war" minOccurs="0" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation source="version">4.0.0</xs:documentation>
+                    <xs:documentation source="description">The GAV coordinates for a 'war' packaging.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
             <xs:element name="modelVersion" minOccurs="0" type="xs:string">
                 <xs:annotation>
                     <xs:documentation source="version">4.0.0</xs:documentation>
@@ -294,35 +306,35 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element name="dependency" minOccurs="0" maxOccurs="unbounded" type="Dependency"/>
-                        <xs:element name="provided" minOccurs="0" maxOccurs="1" type="xs:complexType">
+                        <xs:element name="provided" minOccurs="0" type="xs:complexType">
                             <xs:annotation>
                                 <xs:documentation source="version">5.0.0</xs:documentation>
                                 <xs:documentation source="description">The dependencies of `provided` scope
                                 </xs:documentation>
                             </xs:annotation>
                         </xs:element>
-                        <xs:element name="compile" minOccurs="0" maxOccurs="1" type="xs:complexType">
+                        <xs:element name="compile" minOccurs="0" type="xs:complexType">
                             <xs:annotation>
                                 <xs:documentation source="version">5.0.0</xs:documentation>
                                 <xs:documentation source="description">The dependencies of `compile` scope
                                 </xs:documentation>
                             </xs:annotation>
                         </xs:element>
-                        <xs:element name="runtime" minOccurs="0" maxOccurs="1" type="xs:complexType">
+                        <xs:element name="runtime" minOccurs="0" type="xs:complexType">
                             <xs:annotation>
                                 <xs:documentation source="version">5.0.0</xs:documentation>
                                 <xs:documentation source="description">The dependencies of `runtime` scope
                                 </xs:documentation>
                             </xs:annotation>
                         </xs:element>
-                        <xs:element name="system" minOccurs="0" maxOccurs="1" type="xs:complexType">
+                        <xs:element name="system" minOccurs="0" type="xs:complexType">
                             <xs:annotation>
                                 <xs:documentation source="version">5.0.0</xs:documentation>
                                 <xs:documentation source="description">The dependencies of `system` scope
                                 </xs:documentation>
                             </xs:annotation>
                         </xs:element>
-                        <xs:element name="test" minOccurs="0" maxOccurs="1" type="xs:complexType">
+                        <xs:element name="test" minOccurs="0" type="xs:complexType">
                             <xs:annotation>
                                 <xs:documentation source="version">5.0.0</xs:documentation>
                                 <xs:documentation source="description">The dependencies of `test` scope
