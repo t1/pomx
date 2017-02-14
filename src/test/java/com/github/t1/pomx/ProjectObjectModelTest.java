@@ -3,22 +3,32 @@ package com.github.t1.pomx;
 import org.junit.Test;
 
 import java.io.File;
-import java.nio.file.Paths;
+import java.nio.file.*;
 
 import static org.assertj.core.api.Assertions.*;
 
 public class ProjectObjectModelTest {
     private static final String XML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-    private static final String NAMESPACE =
-            "xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""
-                    + " xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\"";
+    private static final String NAMESPACE = ""
+            + "xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""
+            + " xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\"";
+    private static final String WARNING = warning("nil:--");
+
+    private static String warning(Object source) {
+        return ""
+                + "    <!-- WARNING: Do Not Modify This File! -->\n"
+                + "    <!-- Generated from " + source + " -->\n";
+    }
 
 
     @Test
-    public void shouldLoadRealPom() throws Exception {
-        ProjectObjectModel pom = ProjectObjectModel.readFrom(Paths.get("pom.xml"));
+    public void shouldLeaveRealPomMoreOrLessAsIs() throws Exception {
+        Path path = Paths.get("pom.xml");
+        ProjectObjectModel pom = ProjectObjectModel.readFrom(path);
 
-        assertThat(pom.asString()).isEqualTo(contentOf(new File("pom.xml")).replace("\" ?>", "\"?>"));
+        String xml = pom.asString().replace(warning("pom.xml"), "");
+
+        assertThat(xml).isEqualTo(contentOf(new File("pom.xml")).replace("\" ?>", "\"?>"));
     }
 
     @Test
@@ -28,7 +38,7 @@ public class ProjectObjectModelTest {
                 + "</project>\n");
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project " + NAMESPACE + ">\n"
+                + "<project " + NAMESPACE + ">\n" + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + "</project>\n");
     }
@@ -41,7 +51,7 @@ public class ProjectObjectModelTest {
                 + "</project>\n");
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project " + NAMESPACE + ">\n"
+                + "<project " + NAMESPACE + ">\n" + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + "</project>\n");
     }
@@ -54,7 +64,7 @@ public class ProjectObjectModelTest {
                 + "</project>\n");
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project " + NAMESPACE + ">\n"
+                + "<project " + NAMESPACE + ">\n" + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + "    <groupId>dummy-group</groupId>\n"
                 + "    <artifactId>dummy-artifact</artifactId>\n"
@@ -71,7 +81,7 @@ public class ProjectObjectModelTest {
                 + "</project>\n");
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project " + NAMESPACE + ">\n"
+                + "<project " + NAMESPACE + ">\n" + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + "    <groupId>dummy-group</groupId>\n"
                 + "    <artifactId>dummy-artifact</artifactId>\n"
@@ -126,7 +136,7 @@ public class ProjectObjectModelTest {
                 + "</project>\n");
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project " + NAMESPACE + ">\n"
+                + "<project " + NAMESPACE + ">\n" + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + "    <groupId>dummy-group</groupId>\n"
                 + "    <artifactId>dummy-artifact</artifactId>\n"
@@ -168,7 +178,7 @@ public class ProjectObjectModelTest {
                 + "</project>\n");
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project " + NAMESPACE + ">\n"
+                + "<project " + NAMESPACE + ">\n" + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + "    <build>\n"
                 + "        <plugins>\n"
@@ -200,7 +210,7 @@ public class ProjectObjectModelTest {
                 + "</project>\n");
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project " + NAMESPACE + ">\n"
+                + "<project " + NAMESPACE + ">\n" + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + "    <dependencyManagement>\n"
                 + "        <dependencies>\n"
@@ -229,7 +239,7 @@ public class ProjectObjectModelTest {
                 + "</project>\n");
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project " + NAMESPACE + ">\n"
+                + "<project " + NAMESPACE + ">\n" + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + "    <dependencies>\n"
                 + "        <dependency>\n"
@@ -255,7 +265,7 @@ public class ProjectObjectModelTest {
                 + "</project>\n");
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project " + NAMESPACE + ">\n"
+                + "<project " + NAMESPACE + ">\n" + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + "    <dependencies>\n"
                 + "        <dependency>\n"
@@ -289,7 +299,7 @@ public class ProjectObjectModelTest {
                 + "</project>\n");
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project " + NAMESPACE + ">\n"
+                + "<project " + NAMESPACE + ">\n" + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + "    <dependencies>\n"
                 + "        <dependency>\n"

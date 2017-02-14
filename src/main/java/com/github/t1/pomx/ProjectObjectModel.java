@@ -5,6 +5,7 @@ import com.github.t1.xml.XmlElement;
 import lombok.*;
 
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.*;
 import java.util.*;
 
@@ -36,11 +37,21 @@ class ProjectObjectModel {
     }
 
     private void expand() {
+        writeGeneratedWarning();
         expandModelVersion();
         expandGav();
         expandBuildPlugins();
         expandDependencyManagement();
         expandDependencies();
+    }
+
+    private void writeGeneratedWarning() {
+        out.addComment("WARNING: Do Not Modify This File!", atBegin());
+        URI uri = in.uri();
+        Object source = uri.getScheme().equals("file")
+                ? Paths.get(System.getProperty("user.dir")).relativize(Paths.get(uri))
+                : uri;
+        out.addComment("Generated from " + source, atBegin());
     }
 
     private void expandModelVersion() {

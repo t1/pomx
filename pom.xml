@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/5.0.0">
+    <!-- WARNING: Do Not Modify This File! -->
+    <!-- Generated from pomx.xml -->
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.t1</groupId>
     <artifactId>pomx</artifactId>
@@ -13,6 +15,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.version>3.3.9</maven.version>
     </properties>
 
     <build>
@@ -31,6 +34,19 @@
                     <fork>true</fork>
                     <compilerArgument>-parameters</compilerArgument>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-component-metadata</artifactId>
+            <version>1.7.1</version>
+            <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate-metadata</goal>
+                            <goal>generate-test-metadata</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -83,6 +99,24 @@
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok</artifactId>
         <version>1.16.14</version>
+        <scope>provided</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-model</artifactId>
+        <version>${maven.version}</version>
+        <scope>provided</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-model-builder</artifactId>
+        <version>${maven.version}</version>
+        <scope>provided</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.eclipse.sisu</groupId>
+        <artifactId>org.eclipse.sisu.plexus</artifactId>
+        <version>0.3.3</version>
         <scope>provided</scope>
     </dependency>
 

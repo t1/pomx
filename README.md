@@ -45,6 +45,26 @@ In this project, I do so by allowing profiles to be defined in Maven repository 
 Xml is not the problem.
 
 
+## Quick-Start
+
+Add a directory `.mvn` to your project.
+Create a file `extensions.xml` in `.mvn` containing:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<extensions>
+    <extension>
+        <groupId>com.github.t1</groupId>
+        <artifactId>pomx</artifactId>
+        <version>VERSION</version>
+    </extension>
+</extensions>
+```
+
+Copy your `pom.xml` to `pomx.xml` and stop using the old file... it will be overwritten with every build.
+
+
+
 ## Setup
 
 I took a look at the code of the Polyglot project, but I absolutely need a classic POM to be generated
@@ -52,8 +72,6 @@ for other tools to work correctly; Polyglot still works on this.
 And my code is much smaller and easier to understand.
 
 The XSD is boldly named `http://maven.apache.org/POM/5.0.0`.
-
-And I think I should make it a Maven extension.
 
 
 ## Features
