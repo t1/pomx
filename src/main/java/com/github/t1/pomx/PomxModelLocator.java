@@ -10,7 +10,7 @@ import java.nio.file.*;
 @Component(role = ModelLocator.class)
 public class PomxModelLocator implements ModelLocator {
     @Requirement
-    private Logger log;
+    Logger log;
 
     @Override public File locatePom(File dir) {
         Path pom = dir.toPath().resolve("pom.xml");

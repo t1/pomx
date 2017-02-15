@@ -83,6 +83,7 @@
 
         <test>
             <jar>junit:junit:4.12</jar>
+            <jar>org.mockito:mockito-core:2.6.1</jar>
             <jar>com.github.t1:test-tools:1.5.0</jar>
             <jar>org.assertj:assertj-core:3.6.2</jar>
         </test>

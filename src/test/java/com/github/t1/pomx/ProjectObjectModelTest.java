@@ -26,9 +26,21 @@ public class ProjectObjectModelTest {
         Path path = Paths.get("pom.xml");
         ProjectObjectModel pom = ProjectObjectModel.readFrom(path);
 
-        String xml = pom.asString().replace(warning("pom.xml"), "");
+        String xml = pom.asString();
 
-        assertThat(xml).isEqualTo(contentOf(new File("pom.xml")).replace("\" ?>", "\"?>"));
+        assertThat(xml).isEqualTo(contentOf(new File("pom.xml"))
+                .replace("\" ?>", "\"?>")
+                .replace(warning("pomx.xml"), warning("pomx.xml") + warning("pom.xml")));
+    }
+
+    @Test
+    public void shouldWritePom() throws Exception {
+        ProjectObjectModel pom = ProjectObjectModel.readFrom(Paths.get("pomx.xml"));
+        Path target = Paths.get("target/test-pom.xml");
+
+        pom.writeTo(target);
+
+        assertThat(contentOf(target.toFile())).isEqualTo(contentOf(new File("pom.xml")));
     }
 
     @Test

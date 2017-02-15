@@ -134,6 +134,12 @@
         <scope>test</scope>
     </dependency>
     <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>2.6.1</version>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
         <groupId>com.github.t1</groupId>
         <artifactId>test-tools</artifactId>
         <version>1.5.0</version>
