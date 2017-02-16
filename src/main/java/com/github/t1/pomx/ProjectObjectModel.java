@@ -12,9 +12,13 @@ import java.util.*;
 import static com.github.t1.xml.XmlElement.*;
 import static java.nio.charset.StandardCharsets.*;
 import static java.util.Arrays.*;
+import static java.util.stream.Collectors.*;
 
 @RequiredArgsConstructor
 class ProjectObjectModel {
+    private static final List<String> PACKAGINGS = asList("war", "jar", "pom");
+    private static final List<String> PROFILE_NO_COPY_ELEMENTS =
+            asList("modelVersion", "groupId", "artifactId", "version", "packaging");
     private static final List<String> SCOPES = asList("provided", "compile", "runtime", "system", "test");
 
     static ProjectObjectModel from(String xml) { return new ProjectObjectModel(Xml.fromString(xml)); }
@@ -24,9 +28,7 @@ class ProjectObjectModel {
     private final Xml in;
     private Xml out;
 
-    String asString() {
-        return converted().toXmlString();
-    }
+    String asString() { return converted().toXmlString(); }
 
     private Xml converted() {
         if (out == null) {
@@ -37,21 +39,22 @@ class ProjectObjectModel {
     }
 
     private void expand() {
-        writeGeneratedWarning();
         expandModelVersion();
+        writeGeneratedWarning();
         expandGav();
         expandBuildPlugins();
         expandDependencyManagement();
         expandDependencies();
+        expandExternalProfiles();
     }
 
     private void writeGeneratedWarning() {
-        out.addComment("WARNING: Do Not Modify This File!", atBegin());
         URI uri = in.uri();
         Object source = uri.getScheme().equals("file")
                 ? Paths.get(System.getProperty("user.dir")).relativize(Paths.get(uri))
                 : uri;
         out.addComment("Generated from " + source, atBegin());
+        out.addComment("WARNING: Do Not Modify This File!", atBegin());
     }
 
     private void expandModelVersion() {
@@ -61,22 +64,25 @@ class ProjectObjectModel {
     }
 
     private void expandBuildPlugins() {
-        out.find("/project/build/plugins")
-           .forEach(plugins -> plugins
-                   .find("plugin")
+        out.getOptionalElement("build/plugins")
+           .ifPresent(plugins -> plugins
+                   .elements().stream()
+                   .filter(element -> element.getName().equals("plugin"))
+                   .filter(XmlElement::hasId)
                    .forEach(plugin -> {
-                       if (plugin.hasAttribute("id")) {
-                           GAV gav = GAV.split(plugin.getAttribute("id"));
-                           plugin.addElement("version", atBegin()).addText(gav.getVersion());
-                           plugin.addElement("artifactId", atBegin()).addText(gav.getArtifactId());
-                           plugin.addElement("groupId", atBegin()).addText(gav.getGroupId());
-                           plugin.removeAttribute("id");
-                       }
+                       GAV gav = GAV.split(plugin.getAttribute("id"));
+                       plugin.addElement("version", atBegin()).addText(gav.getVersion());
+                       plugin.addElement("artifactId", atBegin()).addText(gav.getArtifactId());
+                       plugin.addElement("groupId", atBegin()).addText(gav.getGroupId());
+                       plugin.removeAttribute("id");
                    }));
     }
 
     private void expandGav() {
-        List<XmlElement> packagings = out.find("/project/*[local-name()='war' or local-name()='jar']");
+        List<XmlElement> packagings = out.find("/project/*["
+                + PACKAGINGS.stream()
+                            .map(packaging -> "local-name()='" + packaging + "'")
+                            .collect(joining(" or ")) + "]");
         if (packagings.isEmpty())
             return;
         if (packagings.size() > 1)
@@ -94,19 +100,19 @@ class ProjectObjectModel {
     }
 
     private void expandDependencyManagement() {
-        out.find("/project/dependencyManagement/dependencies")
-           .forEach(dependencies -> dependencies
-                   .find("pom")
-                   .forEach(dependency -> {
-                       GAV gav = GAV.split(dependency.getText());
-                       XmlElement element = dependencies.addElement("dependency", before(dependency));
-                       element.addElement("groupId").addText(gav.getGroupId());
-                       element.addElement("artifactId").addText(gav.getArtifactId());
-                       element.addElement("version").addText(gav.getVersion());
-                       element.addElement("scope").addText("import");
-                       element.addElement("type").addText(dependency.getName());
-                       dependency.remove();
-                   }));
+        out.getOptionalElement("dependencyManagement/dependencies")
+           .ifPresent(dependencies -> dependencies
+                           .find("pom")
+                           .forEach(dependency -> {
+                               GAV gav = GAV.split(dependency.getText());
+                               XmlElement element = dependencies.addElement("dependency", before(dependency));
+                               element.addElement("groupId").addText(gav.getGroupId());
+                               element.addElement("artifactId").addText(gav.getArtifactId());
+                               element.addElement("version").addText(gav.getVersion());
+                               element.addElement("scope").addText("import");
+                               element.addElement("type").addText(dependency.getName());
+                               dependency.remove();
+                           }));
     }
 
     private void expandDependencies() {
@@ -128,6 +134,28 @@ class ProjectObjectModel {
                           scope.remove();
                       }));
     }
+
+    private void expandExternalProfiles() {
+        if (!out.find("profile").isEmpty())
+            out.nl();
+        out.find("profile")
+           .forEach(source -> {
+               GAV gav = GAV.split(source.getText());
+               XmlElement target = out.getOrCreateElement("profiles").addElement("profile");
+               target.addElement("id").addText(gav.getGroupId() + ":" + gav.getArtifactId());
+               // user.dir is always set, so this activation always triggers
+               target.addElement("activation").addElement("property").addElement("name").addText("user.dir");
+               ProjectObjectModel xml = ProjectObjectModel.readFrom(
+                       Paths.get("/Users/rdohna/.m2/repository/some/profile/1.0/profile-1.0.pom"));
+               xml.asXml().elements().stream()
+                  .filter(element -> !PROFILE_NO_COPY_ELEMENTS.contains(element.getName()))
+                  .forEach(target::addNode);
+               source.remove();
+           });
+    }
+
+
+    private Xml asXml() { return converted(); }
 
     @SneakyThrows(IOException.class)
     void writeTo(Path path) {

@@ -13,6 +13,10 @@ public class ProjectObjectModelTest {
             + "xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""
             + " xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\"";
     private static final String WARNING = warning("nil:--");
+    private static final String DUMMY_GAV = ""
+            + "    <groupId>dummy-group</groupId>\n"
+            + "    <artifactId>dummy-artifact</artifactId>\n"
+            + "    <version>1.2.3-SNAPSHOT</version>\n";
 
     private static String warning(Object source) {
         return ""
@@ -30,17 +34,20 @@ public class ProjectObjectModelTest {
 
         assertThat(xml).isEqualTo(contentOf(new File("pom.xml"))
                 .replace("\" ?>", "\"?>")
-                .replace(warning("pomx.xml"), warning("pomx.xml") + warning("pom.xml")));
+                .replace(warning("pomx.xml"), warning("pom.xml") + warning("pomx.xml")));
     }
 
     @Test
     public void shouldWritePom() throws Exception {
         ProjectObjectModel pom = ProjectObjectModel.readFrom(Paths.get("pomx.xml"));
         Path target = Paths.get("target/test-pom.xml");
+        try {
+            pom.writeTo(target);
 
-        pom.writeTo(target);
-
-        assertThat(contentOf(target.toFile())).isEqualTo(contentOf(new File("pom.xml")));
+            assertThat(contentOf(target.toFile())).isEqualTo(contentOf(new File("pom.xml")));
+        } finally {
+            Files.deleteIfExists(target);
+        }
     }
 
     @Test
@@ -78,10 +85,23 @@ public class ProjectObjectModelTest {
         assertThat(pom.asString()).isEqualTo(XML
                 + "<project " + NAMESPACE + ">\n" + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
-                + "    <groupId>dummy-group</groupId>\n"
-                + "    <artifactId>dummy-artifact</artifactId>\n"
-                + "    <version>1.2.3-SNAPSHOT</version>\n"
+                + DUMMY_GAV
                 + "    <packaging>jar</packaging>\n"
+                + "</project>\n");
+    }
+
+    @Test
+    public void shouldExpandPomGAV() throws Exception {
+        ProjectObjectModel pom = ProjectObjectModel.from(XML
+                + "<project " + NAMESPACE + ">\n"
+                + "    <pom>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</pom>\n"
+                + "</project>\n");
+
+        assertThat(pom.asString()).isEqualTo(XML
+                + "<project " + NAMESPACE + ">\n" + WARNING
+                + "    <modelVersion>4.0.0</modelVersion>\n"
+                + DUMMY_GAV
+                + "    <packaging>pom</packaging>\n"
                 + "</project>\n");
     }
 
@@ -95,9 +115,7 @@ public class ProjectObjectModelTest {
         assertThat(pom.asString()).isEqualTo(XML
                 + "<project " + NAMESPACE + ">\n" + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
-                + "    <groupId>dummy-group</groupId>\n"
-                + "    <artifactId>dummy-artifact</artifactId>\n"
-                + "    <version>1.2.3-SNAPSHOT</version>\n"
+                + DUMMY_GAV
                 + "    <packaging>war</packaging>\n"
                 + "</project>\n");
     }
@@ -196,9 +214,9 @@ public class ProjectObjectModelTest {
                 + "        <plugins>\n"
                 + "            <plugin>\n"
                 + "                <groupId>org.apache.maven.plugins</groupId>\n"
-                + "            <artifactId>maven-jar-plugin</artifactId>\n"
-                + "            <version>2.4</version>\n"
-                + "            <configuration>\n"
+                + "                <artifactId>maven-jar-plugin</artifactId>\n"
+                + "                <version>2.4</version>\n"
+                + "                <configuration>\n"
                 + "                    <archive>\n"
                 + "                        <addMavenDescriptor>false</addMavenDescriptor>\n"
                 + "                    </archive>\n"
@@ -227,12 +245,12 @@ public class ProjectObjectModelTest {
                 + "    <dependencyManagement>\n"
                 + "        <dependencies>\n"
                 + "            <dependency>\n"
-                + "            <groupId>org.jboss.arquillian</groupId>\n"
-                + "            <artifactId>arquillian-bom</artifactId>\n"
-                + "            <version>1.1.11.Final</version>\n"
-                + "            <scope>import</scope>\n"
-                + "            <type>pom</type>\n"
-                + "        </dependency>\n"
+                + "                <groupId>org.jboss.arquillian</groupId>\n"
+                + "                <artifactId>arquillian-bom</artifactId>\n"
+                + "                <version>1.1.11.Final</version>\n"
+                + "                <scope>import</scope>\n"
+                + "                <type>pom</type>\n"
+                + "            </dependency>\n"
                 + "        </dependencies>\n"
                 + "    </dependencyManagement>\n"
                 + "</project>\n");
@@ -255,11 +273,11 @@ public class ProjectObjectModelTest {
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + "    <dependencies>\n"
                 + "        <dependency>\n"
-                + "        <groupId>junit</groupId>\n"
-                + "        <artifactId>junit</artifactId>\n"
-                + "        <version>4.12</version>\n"
-                + "        <scope>test</scope>\n"
-                + "    </dependency>\n"
+                + "            <groupId>junit</groupId>\n"
+                + "            <artifactId>junit</artifactId>\n"
+                + "            <version>4.12</version>\n"
+                + "            <scope>test</scope>\n"
+                + "        </dependency>\n"
                 + "    </dependencies>\n"
                 + "</project>\n");
     }
@@ -281,17 +299,17 @@ public class ProjectObjectModelTest {
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + "    <dependencies>\n"
                 + "        <dependency>\n"
-                + "        <groupId>junit</groupId>\n"
-                + "        <artifactId>junit</artifactId>\n"
-                + "        <version>4.12</version>\n"
-                + "        <scope>test</scope>\n"
-                + "    </dependency>\n"
-                + "    <dependency>\n"
-                + "        <groupId>org.assertj</groupId>\n"
-                + "        <artifactId>assertj-core</artifactId>\n"
-                + "        <version>3.6.1</version>\n"
-                + "        <scope>test</scope>\n"
-                + "    </dependency>\n"
+                + "            <groupId>junit</groupId>\n"
+                + "            <artifactId>junit</artifactId>\n"
+                + "            <version>4.12</version>\n"
+                + "            <scope>test</scope>\n"
+                + "        </dependency>\n"
+                + "        <dependency>\n"
+                + "            <groupId>org.assertj</groupId>\n"
+                + "            <artifactId>assertj-core</artifactId>\n"
+                + "            <version>3.6.1</version>\n"
+                + "            <scope>test</scope>\n"
+                + "        </dependency>\n"
                 + "    </dependencies>\n"
                 + "</project>\n");
     }
@@ -315,18 +333,47 @@ public class ProjectObjectModelTest {
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + "    <dependencies>\n"
                 + "        <dependency>\n"
-                + "        <groupId>org.projectlombok</groupId>\n"
-                + "        <artifactId>lombok</artifactId>\n"
-                + "        <version>1.16.12</version>\n"
-                + "        <scope>provided</scope>\n"
-                + "    </dependency>\n"
+                + "            <groupId>org.projectlombok</groupId>\n"
+                + "            <artifactId>lombok</artifactId>\n"
+                + "            <version>1.16.12</version>\n"
+                + "            <scope>provided</scope>\n"
+                + "        </dependency>\n"
                 + "        <dependency>\n"
-                + "        <groupId>org.assertj</groupId>\n"
-                + "        <artifactId>assertj-core</artifactId>\n"
-                + "        <version>3.6.1</version>\n"
-                + "        <scope>test</scope>\n"
-                + "    </dependency>\n"
+                + "            <groupId>org.assertj</groupId>\n"
+                + "            <artifactId>assertj-core</artifactId>\n"
+                + "            <version>3.6.1</version>\n"
+                + "            <scope>test</scope>\n"
+                + "        </dependency>\n"
                 + "    </dependencies>\n"
+                + "</project>\n");
+    }
+
+    @Test
+    public void shouldExpandExternalProfile() throws Exception {
+        ProjectObjectModel pom = ProjectObjectModel.from(XML
+                + "<project " + NAMESPACE + ">\n"
+                + "    <jar>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</jar>\n"
+                + "    <profile>dummy-group:dummy-profile:1.0</profile>"
+                + "</project>\n");
+
+        assertThat(pom.asString()).isEqualTo(XML
+                + "<project " + NAMESPACE + ">\n" + WARNING
+                + "    <modelVersion>4.0.0</modelVersion>\n"
+                + DUMMY_GAV
+                + "    <packaging>jar</packaging>\n"
+                + "    <profiles>\n"
+                + "        <profile>\n"
+                + "            <id>dummy-group:dummy-profile</id>\n"
+                + "            <activation>\n"
+                + "                <property>\n"
+                + "                    <name>user.dir</name>\n"
+                + "                </property>\n"
+                + "            </activation>\n"
+                + "            <build>\n"
+                + "        <finalName>xxxxx</finalName>\n"
+                + "    </build>\n"
+                + "        </profile>\n"
+                + "    </profiles>\n"
                 + "</project>\n");
     }
 }

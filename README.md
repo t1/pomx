@@ -208,11 +208,13 @@ new:
 
 ### External Profiles (TODO)
 
-Profiles can be stored in a repository
+Profiles can be stored in a repository and referenced in the POMX:
 
 ```xml
 <profile>javax:javaee-api:7.0</profile>
 ```
+
+They will be included into the POM and activated when run.
 
 
 ### Conditions (TODO)
