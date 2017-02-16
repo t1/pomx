@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<profile>
+<project xmlns="http://maven.apache.org/POM/5.0.0">
     <build>
         <plugins>
             <plugin>
@@ -12,4 +12,4 @@
             </plugin>
         </plugins>
     </build>
-</profile>
+</project>

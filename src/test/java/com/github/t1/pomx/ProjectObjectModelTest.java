@@ -1,6 +1,6 @@
 package com.github.t1.pomx;
 
-import org.junit.Test;
+import org.junit.*;
 
 import java.io.File;
 import java.nio.file.*;
@@ -9,9 +9,6 @@ import static org.assertj.core.api.Assertions.*;
 
 public class ProjectObjectModelTest {
     private static final String XML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-    private static final String NAMESPACE = ""
-            + "xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""
-            + " xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\"";
     private static final String WARNING = warning("nil:--");
     private static final String DUMMY_GAV = ""
             + "    <groupId>dummy-group</groupId>\n"
@@ -24,6 +21,10 @@ public class ProjectObjectModelTest {
                 + "    <!-- Generated from " + source + " -->\n";
     }
 
+    @Before
+    public void setUp() throws Exception {
+        Resolver.REPOSITORY = Paths.get("src/test/resources/repository");
+    }
 
     @Test
     public void shouldLeaveRealPomMoreOrLessAsIs() throws Exception {
@@ -53,11 +54,11 @@ public class ProjectObjectModelTest {
     @Test
     public void shouldAddModelVersion() throws Exception {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
-                + "<project " + NAMESPACE + ">\n"
+                + "<project>\n"
                 + "</project>\n");
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project " + NAMESPACE + ">\n" + WARNING
+                + "<project>\n" + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + "</project>\n");
     }
@@ -65,12 +66,12 @@ public class ProjectObjectModelTest {
     @Test
     public void shouldNotAddModelVersionIfAlreadyThere() throws Exception {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
-                + "<project " + NAMESPACE + ">\n"
+                + "<project>\n"
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + "</project>\n");
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project " + NAMESPACE + ">\n" + WARNING
+                + "<project>\n" + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + "</project>\n");
     }
@@ -78,12 +79,12 @@ public class ProjectObjectModelTest {
     @Test
     public void shouldExpandJarGAV() throws Exception {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
-                + "<project " + NAMESPACE + ">\n"
+                + "<project>\n"
                 + "    <jar>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</jar>\n"
                 + "</project>\n");
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project " + NAMESPACE + ">\n" + WARNING
+                + "<project>\n" + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + DUMMY_GAV
                 + "    <packaging>jar</packaging>\n"
@@ -93,12 +94,12 @@ public class ProjectObjectModelTest {
     @Test
     public void shouldExpandPomGAV() throws Exception {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
-                + "<project " + NAMESPACE + ">\n"
+                + "<project>\n"
                 + "    <pom>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</pom>\n"
                 + "</project>\n");
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project " + NAMESPACE + ">\n" + WARNING
+                + "<project>\n" + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + DUMMY_GAV
                 + "    <packaging>pom</packaging>\n"
@@ -108,12 +109,12 @@ public class ProjectObjectModelTest {
     @Test
     public void shouldExpandWarGAV() throws Exception {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
-                + "<project " + NAMESPACE + ">\n"
+                + "<project>\n"
                 + "    <war>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</war>\n"
                 + "</project>\n");
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project " + NAMESPACE + ">\n" + WARNING
+                + "<project>\n" + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + DUMMY_GAV
                 + "    <packaging>war</packaging>\n"
@@ -124,7 +125,7 @@ public class ProjectObjectModelTest {
     public void shouldFailToExpandMultipleGAV() throws Exception {
         Throwable throwable = catchThrowable(() -> ProjectObjectModel
                 .from(XML
-                        + "<project " + NAMESPACE + ">\n"
+                        + "<project>\n"
                         + "    <war>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</war>\n"
                         + "    <war>dummy-group2:dummy-artifact2:1.2.3-SNAPSHOT</war>\n"
                         + "</project>\n")
@@ -137,7 +138,7 @@ public class ProjectObjectModelTest {
     public void shouldFailToExpandGavWithOneItem() throws Exception {
         Throwable throwable = catchThrowable(() -> ProjectObjectModel
                 .from(XML
-                        + "<project " + NAMESPACE + ">\n"
+                        + "<project>\n"
                         + "    <war>dummy-group</war>\n"
                         + "</project>\n")
                 .asString());
@@ -149,7 +150,7 @@ public class ProjectObjectModelTest {
     public void shouldFailToExpandGavWithTwoItems() throws Exception {
         Throwable throwable = catchThrowable(() -> ProjectObjectModel
                 .from(XML
-                        + "<project " + NAMESPACE + ">\n"
+                        + "<project>\n"
                         + "    <war>dummy-group:dummy-artifact</war>\n"
                         + "</project>\n")
                 .asString());
@@ -161,12 +162,12 @@ public class ProjectObjectModelTest {
     @Test
     public void shouldExpandGACV() throws Exception {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
-                + "<project " + NAMESPACE + ">\n"
+                + "<project>\n"
                 + "    <war>dummy-group:dummy-artifact:mac-os:1.2.3-SNAPSHOT</war>\n"
                 + "</project>\n");
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project " + NAMESPACE + ">\n" + WARNING
+                + "<project>\n" + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + "    <groupId>dummy-group</groupId>\n"
                 + "    <artifactId>dummy-artifact</artifactId>\n"
@@ -180,7 +181,7 @@ public class ProjectObjectModelTest {
     public void shouldFailToExpandGavWithFiveItems() throws Exception {
         Throwable throwable = catchThrowable(() -> ProjectObjectModel
                 .from(XML
-                        + "<project " + NAMESPACE + ">\n"
+                        + "<project>\n"
                         + "    <war>dummy-group:dummy-artifact:mac-os:1.2.3-SNAPSHOT:too-much</war>\n"
                         + "</project>\n")
                 .asString());
@@ -193,7 +194,7 @@ public class ProjectObjectModelTest {
     @Test
     public void shouldExpandBuildPlugin() throws Exception {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
-                + "<project " + NAMESPACE + ">\n"
+                + "<project>\n"
                 + "    <build>\n"
                 + "        <plugins>\n"
                 + "            <plugin id=\"org.apache.maven.plugins:maven-jar-plugin:2.4\">\n"
@@ -208,7 +209,7 @@ public class ProjectObjectModelTest {
                 + "</project>\n");
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project " + NAMESPACE + ">\n" + WARNING
+                + "<project>\n" + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + "    <build>\n"
                 + "        <plugins>\n"
@@ -231,7 +232,7 @@ public class ProjectObjectModelTest {
     @Test
     public void shouldExpandDependencyManagement() throws Exception {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
-                + "<project " + NAMESPACE + ">\n"
+                + "<project>\n"
                 + "    <dependencyManagement>\n"
                 + "        <dependencies>\n"
                 + "            <pom>org.jboss.arquillian:arquillian-bom:1.1.11.Final</pom>\n"
@@ -240,7 +241,7 @@ public class ProjectObjectModelTest {
                 + "</project>\n");
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project " + NAMESPACE + ">\n" + WARNING
+                + "<project>\n" + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + "    <dependencyManagement>\n"
                 + "        <dependencies>\n"
@@ -260,7 +261,7 @@ public class ProjectObjectModelTest {
     @Test
     public void shouldExpandTestDependency() throws Exception {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
-                + "<project " + NAMESPACE + ">\n"
+                + "<project>\n"
                 + "    <dependencies>\n"
                 + "        <test>\n"
                 + "            <jar>junit:junit:4.12</jar>\n"
@@ -269,7 +270,7 @@ public class ProjectObjectModelTest {
                 + "</project>\n");
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project " + NAMESPACE + ">\n" + WARNING
+                + "<project>\n" + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + "    <dependencies>\n"
                 + "        <dependency>\n"
@@ -285,7 +286,7 @@ public class ProjectObjectModelTest {
     @Test
     public void shouldExpandTwoTestDependencies() throws Exception {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
-                + "<project " + NAMESPACE + ">\n"
+                + "<project>\n"
                 + "    <dependencies>\n"
                 + "        <test>\n"
                 + "            <jar>junit:junit:4.12</jar>\n"
@@ -295,7 +296,7 @@ public class ProjectObjectModelTest {
                 + "</project>\n");
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project " + NAMESPACE + ">\n" + WARNING
+                + "<project>\n" + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + "    <dependencies>\n"
                 + "        <dependency>\n"
@@ -317,7 +318,7 @@ public class ProjectObjectModelTest {
     @Test
     public void shouldExpandTwoScopeDependencies() throws Exception {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
-                + "<project " + NAMESPACE + ">\n"
+                + "<project>\n"
                 + "    <dependencies>\n"
                 + "        <provided>\n"
                 + "            <jar>org.projectlombok:lombok:1.16.12</jar>\n"
@@ -329,7 +330,7 @@ public class ProjectObjectModelTest {
                 + "</project>\n");
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project " + NAMESPACE + ">\n" + WARNING
+                + "<project>\n" + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + "    <dependencies>\n"
                 + "        <dependency>\n"
@@ -351,13 +352,13 @@ public class ProjectObjectModelTest {
     @Test
     public void shouldExpandExternalProfile() throws Exception {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
-                + "<project " + NAMESPACE + ">\n"
+                + "<project>\n"
                 + "    <jar>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</jar>\n"
                 + "    <profile>dummy-group:dummy-profile:1.0</profile>"
                 + "</project>\n");
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project " + NAMESPACE + ">\n" + WARNING
+                + "<project>\n" + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + DUMMY_GAV
                 + "    <packaging>jar</packaging>\n"

@@ -28,6 +28,7 @@ A POM could use attributes like this:
 
 The Polyglot project has an XML format that goes exactly this way.
 The other file formats use an even more compact format by simply separating the GAV fields with colons.
+This is less explicit, but the GAV coordinates are common enough, nowadays.
 In XML this could look like this:
 
 ```xml
@@ -35,8 +36,10 @@ In XML this could look like this:
 ```
 
 While this makes the syntax more concise, the real benefit other languages _can_ provide (if used properly),
-is to reduce the repetition in you build files.
-By leveraging reuse, build files don't just get more concise, they also get more uniform and more expressive.
+is to reduce the repetition in you build files - Don't Repeat Yourself or DRY.
+By leveraging reuse, build files don't just get more concise,
+they also get more uniform (by reducing the snowflake effect)
+and more expressive (if you can find a solid abstraction with a clear name).
 I.e. if you want e.g. a Java EE 7 WAR, you should only specify that this is what you want,
 and the know-how required to build it, the dependencies, the Java compiler setting, the properties, etc.
 is expressed once-and-only-once in a file in the repository. We can do that with XML.
@@ -214,19 +217,19 @@ Profiles can be stored in a repository and referenced in the POMX:
 <profile>javax:javaee-api:7.0</profile>
 ```
 
-They will be included into the POM and activated when run.
-
-
-### Conditions (TODO)
-
-Some parts can be switched on a condition (similar to profile activation):
+The profile xml file is resolved like a maven dependency, included into the POM, and activated when run.
+Even though it is a `profile`, the file can have a `project` header like a `pomx`, i.e.:
 
 ```xml
-<if packaging="war">
+<?xml version="1.0" encoding="UTF-8" ?>
+<project xmlns="http://maven.apache.org/POM/5.0.0">
+    <pom>my.group:my.artifact:1.0</pom>
     ...
-</if>
+</project>
 ```
 
-Currently supported conditions:
-* `packaging="T"`
+In your POM, this profile would have the `<id>my.group:my.artifact</id>` so you can disable it like this:
 
+`mvn clean install -P-my.group:my.artifact`
+
+(The colon was chosen for clarity, as '.' and '-' are too common in group and artifact ids)

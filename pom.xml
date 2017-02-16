@@ -152,18 +152,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <profiles>
-        <profile>
-            <id>some:profile</id>
-            <activation>
-                <property>
-                    <name>user.dir</name>
-                </property>
-            </activation>
-            <build>
-        <finalName>xxxxx</finalName>
-    </build>
-        </profile>
-    </profiles>
 </project>

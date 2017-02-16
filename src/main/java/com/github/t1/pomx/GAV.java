@@ -2,6 +2,8 @@ package com.github.t1.pomx;
 
 import lombok.*;
 
+import java.nio.file.*;
+
 @Getter
 @RequiredArgsConstructor
 class GAV {
@@ -26,5 +28,12 @@ class GAV {
             throw new IllegalArgumentException(
                     "too many elements " + split.length + " in GAV expression: '" + expression + "'");
         }
+    }
+
+    Path asPath(String type) {
+        return Paths.get(groupId.replace('.', '/'))
+                    .resolve(artifactId)
+                    .resolve(version)
+                    .resolve(artifactId + "-" + version + "." + type);
     }
 }

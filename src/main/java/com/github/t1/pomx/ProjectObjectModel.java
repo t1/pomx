@@ -21,12 +21,20 @@ class ProjectObjectModel {
             asList("modelVersion", "groupId", "artifactId", "version", "packaging");
     private static final List<String> SCOPES = asList("provided", "compile", "runtime", "system", "test");
 
-    static ProjectObjectModel from(String xml) { return new ProjectObjectModel(Xml.fromString(xml)); }
 
-    static ProjectObjectModel readFrom(Path path) { return new ProjectObjectModel(Xml.load(path.toUri())); }
+    private static final Resolver RESOLVER = new Resolver();
+
+
+    static ProjectObjectModel from(String xml) { return from(Xml.fromString(xml)); }
+
+    static ProjectObjectModel readFrom(Path path) { return from(Xml.load(path.toUri())); }
+
+    static ProjectObjectModel from(Xml xml) { return new ProjectObjectModel(xml); }
+
 
     private final Xml in;
     private Xml out;
+
 
     String asString() { return converted().toXmlString(); }
 
@@ -102,17 +110,17 @@ class ProjectObjectModel {
     private void expandDependencyManagement() {
         out.getOptionalElement("dependencyManagement/dependencies")
            .ifPresent(dependencies -> dependencies
-                           .find("pom")
-                           .forEach(dependency -> {
-                               GAV gav = GAV.split(dependency.getText());
-                               XmlElement element = dependencies.addElement("dependency", before(dependency));
-                               element.addElement("groupId").addText(gav.getGroupId());
-                               element.addElement("artifactId").addText(gav.getArtifactId());
-                               element.addElement("version").addText(gav.getVersion());
-                               element.addElement("scope").addText("import");
-                               element.addElement("type").addText(dependency.getName());
-                               dependency.remove();
-                           }));
+                   .find("pom")
+                   .forEach(dependency -> {
+                       GAV gav = GAV.split(dependency.getText());
+                       XmlElement element = dependencies.addElement("dependency", before(dependency));
+                       element.addElement("groupId").addText(gav.getGroupId());
+                       element.addElement("artifactId").addText(gav.getArtifactId());
+                       element.addElement("version").addText(gav.getVersion());
+                       element.addElement("scope").addText("import");
+                       element.addElement("type").addText(dependency.getName());
+                       dependency.remove();
+                   }));
     }
 
     private void expandDependencies() {
@@ -145,11 +153,10 @@ class ProjectObjectModel {
                target.addElement("id").addText(gav.getGroupId() + ":" + gav.getArtifactId());
                // user.dir is always set, so this activation always triggers
                target.addElement("activation").addElement("property").addElement("name").addText("user.dir");
-               ProjectObjectModel xml = ProjectObjectModel.readFrom(
-                       Paths.get("/Users/rdohna/.m2/repository/some/profile/1.0/profile-1.0.pom"));
-               xml.asXml().elements().stream()
-                  .filter(element -> !PROFILE_NO_COPY_ELEMENTS.contains(element.getName()))
-                  .forEach(target::addNode);
+               ProjectObjectModel.readFrom(RESOLVER.resolve(gav, "xml"))
+                                 .asXml().elements().stream()
+                                 .filter(element -> !PROFILE_NO_COPY_ELEMENTS.contains(element.getName()))
+                                 .forEach(target::addNode);
                source.remove();
            });
     }

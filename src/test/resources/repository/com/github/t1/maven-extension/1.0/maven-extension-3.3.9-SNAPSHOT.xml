@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <project xmlns="http://maven.apache.org/POM/5.0.0">
-    <jar>com.github.t1:pomx:0.0.1-SNAPSHOT</jar>
-    <name>POM-X</name>
-    <description>Extended Maven POM file format</description>
+    <pom>com.github.t1:maven-extension:${maven.version}-SNAPSHOT</pom>
+    <name>Maven-Extension</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -15,17 +14,6 @@
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
-            <plugin id="org.apache.maven.plugins:maven-compiler-plugin:3.1">
-                <configuration>
-                    <source>${java.specification.version}</source>
-                    <target>${java.specification.version}</target>
-                    <showWarnings>true</showWarnings>
-                    <showDeprecation>true</showDeprecation>
-                    <encoding>utf8</encoding>
-                    <fork>true</fork>
-                    <compilerArgument>-parameters</compilerArgument>
-                </configuration>
-            </plugin>
             <plugin id="org.codehaus.plexus:plexus-component-metadata:1.7.1">
                 <executions>
                     <execution>
@@ -35,17 +23,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin id="org.apache.maven.plugins:maven-jar-plugin:2.4">
-                <configuration>
-                    <archive>
-                        <addMavenDescriptor>false</addMavenDescriptor>
-                        <manifest>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            <Main-Class>com.github.t1.pomx.Main</Main-Class>
-                        </manifest>
-                    </archive>
-                </configuration>
             </plugin>
             <plugin id="org.apache.maven.plugins:maven-shade-plugin:2.3">
                 <executions>
@@ -61,31 +38,14 @@
                 </configuration>
             </plugin>
             <plugin id="org.apache.maven.plugins:maven-javadoc-plugin:2.9.1"/>
-            <plugin id="org.pitest:pitest-maven:1.1.11">
-                <configuration>
-                    <timestampedReports>false</timestampedReports>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 
     <dependencies>
         <provided>
-            <jar>org.projectlombok:lombok:1.16.14</jar>
             <jar>org.apache.maven:maven-model:${maven.version}</jar>
             <jar>org.apache.maven:maven-model-builder:${maven.version}</jar>
             <jar>org.eclipse.sisu:org.eclipse.sisu.plexus:0.3.3</jar>
         </provided>
-
-        <compile>
-            <jar>com.github.t1:xml:0.0.3-SNAPSHOT</jar>
-        </compile>
-
-        <test>
-            <jar>junit:junit:4.12</jar>
-            <jar>org.mockito:mockito-core:2.7.6</jar>
-            <jar>com.github.t1:test-tools:1.5.0</jar>
-            <jar>org.assertj:assertj-core:3.6.2</jar>
-        </test>
     </dependencies>
 </project>
