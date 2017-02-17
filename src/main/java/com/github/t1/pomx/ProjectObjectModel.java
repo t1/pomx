@@ -20,6 +20,10 @@ class ProjectObjectModel {
     private static final List<String> PROFILE_NO_COPY_ELEMENTS =
             asList("modelVersion", "groupId", "artifactId", "version", "packaging", "name", "description");
     private static final List<String> SCOPES = asList("provided", "compile", "runtime", "system", "test");
+    private static final String XSD = "http://www.w3.org/2001/XMLSchema-instance";
+    private static final String XSI = "xmlns:xsi";
+    private static final String SCHEMA_LOCATION = "xsi:schemaLocation";
+    private static final String POMX_500 = "urn:xsd:maven:pomx:5.0.0";
 
 
     static ProjectObjectModel from(String xml, Resolver resolver) { return from(Xml.fromString(xml), resolver); }
@@ -45,6 +49,7 @@ class ProjectObjectModel {
     }
 
     private void expand() {
+        convertNamespace();
         expandModelVersion();
         writeGeneratedWarning();
         expandGav();
@@ -52,6 +57,14 @@ class ProjectObjectModel {
         expandDependencyManagement();
         expandDependencies();
         expandExternalProfiles();
+    }
+
+    private void convertNamespace() {
+        if (XSD.equals(out.getAttribute(XSI)) && POMX_500.equals(out.getAttribute("xmlns"))) {
+            out.removeAttribute(XSI);
+            out.removeAttribute(SCHEMA_LOCATION);
+            out.setAttribute("xmlns", "http://maven.apache.org/POM/4.0.0");
+        }
     }
 
     private void writeGeneratedWarning() {

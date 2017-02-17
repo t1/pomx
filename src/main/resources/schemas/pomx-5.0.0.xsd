@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
-           targetNamespace="http://maven.apache.org/POM/5.0.0" xmlns="http://maven.apache.org/POM/5.0.0">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="urn:xsd:maven:pomx:5.0.0"
+           xmlns="urn:xsd:maven:pomx:5.0.0"
+           elementFormDefault="qualified">
     <xs:element name="project" type="Model">
         <xs:annotation>
             <xs:documentation source="version">3.0.0+</xs:documentation>

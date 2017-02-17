@@ -74,18 +74,18 @@ I took a look at the code of the Polyglot project, but I absolutely need a class
 for other tools to work correctly; Polyglot still works on this.
 And my code is much smaller and easier to understand.
 
-The XSD is boldly named `http://maven.apache.org/POM/5.0.0`.
+The XSD is in `https://raw.githubusercontent.com/t1/pomx/master/src/main/resources/schemas/pom-5.0.0.xsd`
+and I boldly name the namespace `urn:xsd:maven:pomx:5.0.0`.
 
 
 ## Features
 
-### Include `modelVersion`
+### Include `modelVersion` & New XSD
 
 old:
 
 ```xml
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:xsd:pom"
-         xsi:schemaLocation="urn:xsd:pom http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0">
     <modelVersion>4.0.0</modelVersion>
 </project>
 ```
@@ -93,10 +93,11 @@ old:
 new:
 
 ```xml
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:xsd:pom"
-         xsi:schemaLocation="urn:xsd:pom http://maven.apache.org/xsd/maven-5.0.0.xsd">
+<project xmlns="urn:xsd:maven:pomx:5.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="urn:xsd:maven:pomx:5.0.0 https://raw.githubusercontent.com/t1/pomx/master/src/main/resources/schemas/pom-5.0.0.xsd">
 </project>
 ```
+
 
 ### Compact GAV with packaging as element
 

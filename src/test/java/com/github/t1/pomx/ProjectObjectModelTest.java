@@ -51,13 +51,16 @@ public class ProjectObjectModelTest {
     }
 
     @Test
-    public void shouldAddModelVersion() throws Exception {
+    public void shouldConvertNamespaceVersionAndAddModelVersion() throws Exception {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
-                + "<project>\n"
+                + "<project xmlns=\"urn:xsd:maven:pomx:5.0.0\"\n"
+                + "         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
+                + "         xsi:schemaLocation=\"urn:xsd:maven:pomx:5.0.0 "
+                + "https://raw.githubusercontent.com/t1/pomx/master/src/main/resources/schemas/pomx-5.0.0.xsd\">\n"
                 + "</project>\n", resolver);
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project>\n" + WARNING
+                + "<project xmlns=\"http://maven.apache.org/POM/4.0.0\">\n" + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + "</project>\n");
     }
