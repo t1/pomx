@@ -139,14 +139,6 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
-            <xs:element name="prerequisites" minOccurs="0" type="Prerequisites">
-                <xs:annotation>
-                    <xs:documentation source="version">4.0.0</xs:documentation>
-                    <xs:documentation source="description">
-                        Describes the prerequisites in the build environment for this project.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
             <xs:element name="properties" minOccurs="0">
                 <xs:annotation>
                     <xs:documentation source="version">4.0.0</xs:documentation>
@@ -175,6 +167,15 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
+            <xs:element name="distributionManagement" minOccurs="0" type="DistributionManagement">
+                <xs:annotation>
+                    <xs:documentation source="version">4.0.0</xs:documentation>
+                    <xs:documentation source="description">Distribution information for a project that enables
+                        deployment of the site
+                        and artifacts to remote web servers and repositories respectively.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
             <xs:element name="ciManagement" minOccurs="0" type="CiManagement">
                 <xs:annotation>
                     <xs:documentation source="version">4.0.0</xs:documentation>
@@ -182,18 +183,35 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
-            <xs:element name="mailingLists" minOccurs="0">
+            <xs:element name="licenses" minOccurs="0">
                 <xs:annotation>
                     <xs:documentation source="version">3.0.0+</xs:documentation>
                     <xs:documentation source="description">
-                        Contains information about a project&apos;s mailing lists.
+                        This element describes all of the licenses for this project.
+                        Each license is described by a &lt;code&gt;license&lt;/code&gt; element, which
+                        is then described by additional elements.
+                        Projects should only list the license(s) that applies to the project
+                        and not the licenses that apply to dependencies.
+                        If multiple licenses are listed, it is assumed that the user can select any of them, not that
+                        they
+                        must accept all.
                     </xs:documentation>
                 </xs:annotation>
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element name="mailingList" minOccurs="0" maxOccurs="unbounded" type="MailingList"/>
+                        <xs:element name="license" minOccurs="0" maxOccurs="unbounded" type="License"/>
                     </xs:sequence>
                 </xs:complexType>
+            </xs:element>
+            <xs:element name="organization" minOccurs="0" type="Organization">
+                <xs:annotation>
+                    <xs:documentation source="version">3.0.0+</xs:documentation>
+                    <xs:documentation source="description">
+                        This element describes various attributes of the organization to
+                        which the project belongs. These attributes are utilized when
+                        documentation is created (for copyright notices and links).
+                    </xs:documentation>
+                </xs:annotation>
             </xs:element>
             <xs:element name="developers" minOccurs="0">
                 <xs:annotation>
@@ -221,74 +239,29 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="licenses" minOccurs="0">
+            <xs:element name="mailingLists" minOccurs="0">
                 <xs:annotation>
                     <xs:documentation source="version">3.0.0+</xs:documentation>
                     <xs:documentation source="description">
-                        This element describes all of the licenses for this project.
-                        Each license is described by a &lt;code&gt;license&lt;/code&gt; element, which
-                        is then described by additional elements.
-                        Projects should only list the license(s) that applies to the project
-                        and not the licenses that apply to dependencies.
-                        If multiple licenses are listed, it is assumed that the user can select any of them, not that
-                        they
-                        must accept all.
+                        Contains information about a project&apos;s mailing lists.
                     </xs:documentation>
                 </xs:annotation>
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element name="license" minOccurs="0" maxOccurs="unbounded" type="License"/>
+                        <xs:element name="mailingList" minOccurs="0" maxOccurs="unbounded" type="MailingList"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="scm" minOccurs="0" type="Scm">
+            <xs:element name="pluginRepositories" minOccurs="0">
                 <xs:annotation>
                     <xs:documentation source="version">4.0.0</xs:documentation>
                     <xs:documentation source="description">
-                        Specification for the SCM used by the project, such as CVS, Subversion, etc.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="organization" minOccurs="0" type="Organization">
-                <xs:annotation>
-                    <xs:documentation source="version">3.0.0+</xs:documentation>
-                    <xs:documentation source="description">
-                        This element describes various attributes of the organization to
-                        which the project belongs. These attributes are utilized when
-                        documentation is created (for copyright notices and links).
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="build" minOccurs="0" type="Build">
-                <xs:annotation>
-                    <xs:documentation source="version">3.0.0+</xs:documentation>
-                    <xs:documentation source="description">Information required to build the project.</xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="profiles" minOccurs="0">
-                <xs:annotation>
-                    <xs:documentation source="version">4.0.0</xs:documentation>
-                    <xs:documentation source="description">
-                        A listing of project-local build profiles which will modify the build process when activated.
+                        The lists of the remote repositories for discovering plugins for builds and reports.
                     </xs:documentation>
                 </xs:annotation>
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element name="profile" minOccurs="0" maxOccurs="unbounded" type="Profile"/>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="modules" minOccurs="0">
-                <xs:annotation>
-                    <xs:documentation source="version">4.0.0</xs:documentation>
-                    <xs:documentation source="description">
-                        The modules (sometimes called subprojects) to build as a part of this project.
-                        Each module listed is a relative path to the directory containing the module.
-                    </xs:documentation>
-                </xs:annotation>
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element name="module" minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
+                        <xs:element name="pluginRepository" minOccurs="0" maxOccurs="unbounded" type="Repository"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -306,18 +279,77 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="pluginRepositories" minOccurs="0">
+            <xs:element name="scm" minOccurs="0" type="Scm">
                 <xs:annotation>
                     <xs:documentation source="version">4.0.0</xs:documentation>
                     <xs:documentation source="description">
-                        The lists of the remote repositories for discovering plugins for builds and reports.
+                        Specification for the SCM used by the project, such as CVS, Subversion, etc.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="modules" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation source="version">4.0.0</xs:documentation>
+                    <xs:documentation source="description">
+                        The modules (sometimes called subprojects) to build as a part of this project.
+                        Each module listed is a relative path to the directory containing the module.
                     </xs:documentation>
                 </xs:annotation>
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element name="pluginRepository" minOccurs="0" maxOccurs="unbounded" type="Repository"/>
+                        <xs:element name="module" minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
                     </xs:sequence>
                 </xs:complexType>
+            </xs:element>
+            <xs:element name="prerequisites" minOccurs="0" type="Prerequisites">
+                <xs:annotation>
+                    <xs:documentation source="version">4.0.0</xs:documentation>
+                    <xs:documentation source="description">
+                        Describes the prerequisites in the build environment for this project.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="build" minOccurs="0" type="Build">
+                <xs:annotation>
+                    <xs:documentation source="version">3.0.0+</xs:documentation>
+                    <xs:documentation source="description">Information required to build the project.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="reports" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation source="version">4.0.0</xs:documentation>
+                    <xs:documentation source="description">
+                        &lt;b&gt;Deprecated&lt;/b&gt;. Now ignored by Maven.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:any minOccurs="0" maxOccurs="unbounded" processContents="skip"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="reporting" minOccurs="0" type="Reporting">
+                <xs:annotation>
+                    <xs:documentation source="version">4.0.0</xs:documentation>
+                    <xs:documentation source="description">
+                        This element includes the specification of report plugins to use to generate the reports on the
+                        Maven-generated site. These reports will be run when a user executes &lt;code&gt;mvn site&lt;/code&gt;.
+                        All of the
+                        reports will be included in the navigation bar for browsing.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="dependencyManagement" minOccurs="0" type="DependencyManagement">
+                <xs:annotation>
+                    <xs:documentation source="version">4.0.0</xs:documentation>
+                    <xs:documentation source="description">
+                        Default dependency information for projects that inherit from
+                        this one. The dependencies in this section are not immediately resolved.
+                        Instead, when a POM derived from this one declares a dependency
+                        described by a matching groupId and artifactId, the version and other values from this
+                        section are used for that dependency if they were not already specified.
+                    </xs:documentation>
+                </xs:annotation>
             </xs:element>
             <xs:element name="dependencies" minOccurs="0">
                 <xs:annotation>
@@ -373,50 +405,18 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="reports" minOccurs="0">
+            <xs:element name="profiles" minOccurs="0">
                 <xs:annotation>
                     <xs:documentation source="version">4.0.0</xs:documentation>
                     <xs:documentation source="description">
-                        &lt;b&gt;Deprecated&lt;/b&gt;. Now ignored by Maven.
+                        A listing of project-local build profiles which will modify the build process when activated.
                     </xs:documentation>
                 </xs:annotation>
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:any minOccurs="0" maxOccurs="unbounded" processContents="skip"/>
+                        <xs:element name="profile" minOccurs="0" maxOccurs="unbounded" type="Profile"/>
                     </xs:sequence>
                 </xs:complexType>
-            </xs:element>
-            <xs:element name="reporting" minOccurs="0" type="Reporting">
-                <xs:annotation>
-                    <xs:documentation source="version">4.0.0</xs:documentation>
-                    <xs:documentation source="description">
-                        This element includes the specification of report plugins to use to generate the reports on the
-                        Maven-generated site. These reports will be run when a user executes &lt;code&gt;mvn site&lt;/code&gt;.
-                        All of the
-                        reports will be included in the navigation bar for browsing.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="dependencyManagement" minOccurs="0" type="DependencyManagement">
-                <xs:annotation>
-                    <xs:documentation source="version">4.0.0</xs:documentation>
-                    <xs:documentation source="description">
-                        Default dependency information for projects that inherit from
-                        this one. The dependencies in this section are not immediately resolved.
-                        Instead, when a POM derived from this one declares a dependency
-                        described by a matching groupId and artifactId, the version and other values from this
-                        section are used for that dependency if they were not already specified.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="distributionManagement" minOccurs="0" type="DistributionManagement">
-                <xs:annotation>
-                    <xs:documentation source="version">4.0.0</xs:documentation>
-                    <xs:documentation source="description">Distribution information for a project that enables
-                        deployment of the site
-                        and artifacts to remote web servers and repositories respectively.
-                    </xs:documentation>
-                </xs:annotation>
             </xs:element>
         </xs:sequence>
     </xs:complexType>
