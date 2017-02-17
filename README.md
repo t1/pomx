@@ -209,7 +209,7 @@ new:
 ```
 
 
-### External Profiles (TODO)
+### External Profiles
 
 Profiles can be stored in a repository and referenced in the POMX:
 
@@ -233,3 +233,11 @@ In your POM, this profile would have the `<id>my.group:my.artifact</id>` so you 
 `mvn clean install -P-my.group:my.artifact`
 
 (The colon was chosen for clarity, as '.' and '-' are too common in group and artifact ids)
+
+
+# TODO
+
+External profiles are yet expanded only from your local repository (`~/.m2/repository`).
+So you'll have to fetch them manually before you start the first build:
+
+`mvn dependency:get -DgroupId=my.group -DartifactId=my.artifact -Dpackaging=xml -Dversion=1.0`

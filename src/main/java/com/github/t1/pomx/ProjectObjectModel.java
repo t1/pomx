@@ -18,20 +18,18 @@ import static java.util.stream.Collectors.*;
 class ProjectObjectModel {
     private static final List<String> PACKAGINGS = asList("war", "jar", "pom");
     private static final List<String> PROFILE_NO_COPY_ELEMENTS =
-            asList("modelVersion", "groupId", "artifactId", "version", "packaging");
+            asList("modelVersion", "groupId", "artifactId", "version", "packaging", "name", "description");
     private static final List<String> SCOPES = asList("provided", "compile", "runtime", "system", "test");
 
 
-    private static final Resolver RESOLVER = new Resolver();
+    static ProjectObjectModel from(String xml, Resolver resolver) { return from(Xml.fromString(xml), resolver); }
+
+    static ProjectObjectModel readFrom(Path path, Resolver resolver) { return from(Xml.load(path.toUri()), resolver); }
+
+    static ProjectObjectModel from(Xml xml, Resolver resolver) { return new ProjectObjectModel(resolver, xml); }
 
 
-    static ProjectObjectModel from(String xml) { return from(Xml.fromString(xml)); }
-
-    static ProjectObjectModel readFrom(Path path) { return from(Xml.load(path.toUri())); }
-
-    static ProjectObjectModel from(Xml xml) { return new ProjectObjectModel(xml); }
-
-
+    private final Resolver resolver;
     private final Xml in;
     private Xml out;
 
@@ -153,7 +151,7 @@ class ProjectObjectModel {
                target.addElement("id").addText(gav.getGroupId() + ":" + gav.getArtifactId());
                // user.dir is always set, so this activation always triggers
                target.addElement("activation").addElement("property").addElement("name").addText("user.dir");
-               ProjectObjectModel.readFrom(RESOLVER.resolve(gav, "xml"))
+               ProjectObjectModel.readFrom(resolver.resolve(gav, "xml"), resolver)
                                  .asXml().elements().stream()
                                  .filter(element -> !PROFILE_NO_COPY_ELEMENTS.contains(element.getName()))
                                  .forEach(target::addNode);

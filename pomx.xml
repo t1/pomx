@@ -74,6 +74,8 @@
             <jar>org.projectlombok:lombok:1.16.14</jar>
             <jar>org.apache.maven:maven-model:${maven.version}</jar>
             <jar>org.apache.maven:maven-model-builder:${maven.version}</jar>
+            <jar>org.apache.maven:maven-aether-provider:${maven.version}</jar>
+            <jar>org.apache.maven.resolver:maven-resolver-api:1.0.3</jar>
             <jar>org.eclipse.sisu:org.eclipse.sisu.plexus:0.3.3</jar>
         </provided>
 
