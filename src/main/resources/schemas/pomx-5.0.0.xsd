@@ -122,10 +122,13 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
-            <xs:element name="profile" minOccurs="0" maxOccurs="unbounded" type="xs:string">
+            <xs:element name="inceptionYear" minOccurs="0" type="xs:string">
                 <xs:annotation>
-                    <xs:documentation source="version">5.0.0+</xs:documentation>
-                    <xs:documentation source="description">The GAV coordinates of an external profile</xs:documentation>
+                    <xs:documentation source="version">3.0.0+</xs:documentation>
+                    <xs:documentation source="description">
+                        The year of the project&apos;s inception, specified with 4 digits.
+                        This value is used when generating copyright notices as well as being informational.
+                    </xs:documentation>
                 </xs:annotation>
             </xs:element>
             <xs:element name="url" minOccurs="0" type="xs:string">
@@ -144,6 +147,27 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
+            <xs:element name="properties" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation source="version">4.0.0</xs:documentation>
+                    <xs:documentation source="description">
+                        Properties that can be used throughout the POM as a substitution, and are used as filters in
+                        resources
+                        if enabled. The format is &lt;code&gt;&amp;lt;name&amp;gt;value&amp;lt;/name&amp;gt;&lt;/code&gt;.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:any minOccurs="0" maxOccurs="unbounded" processContents="skip"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="profile" minOccurs="0" maxOccurs="unbounded" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation source="version">5.0.0+</xs:documentation>
+                    <xs:documentation source="description">The GAV coordinates of an external profile</xs:documentation>
+                </xs:annotation>
+            </xs:element>
             <xs:element name="issueManagement" minOccurs="0" type="IssueManagement">
                 <xs:annotation>
                     <xs:documentation source="version">4.0.0</xs:documentation>
@@ -155,15 +179,6 @@
                 <xs:annotation>
                     <xs:documentation source="version">4.0.0</xs:documentation>
                     <xs:documentation source="description">The project&apos;s continuous integration information.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="inceptionYear" minOccurs="0" type="xs:string">
-                <xs:annotation>
-                    <xs:documentation source="version">3.0.0+</xs:documentation>
-                    <xs:documentation source="description">
-                        The year of the project&apos;s inception, specified with 4 digits.
-                        This value is used when generating copyright notices as well as being informational.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
@@ -402,21 +417,6 @@
                         and artifacts to remote web servers and repositories respectively.
                     </xs:documentation>
                 </xs:annotation>
-            </xs:element>
-            <xs:element name="properties" minOccurs="0">
-                <xs:annotation>
-                    <xs:documentation source="version">4.0.0</xs:documentation>
-                    <xs:documentation source="description">
-                        Properties that can be used throughout the POM as a substitution, and are used as filters in
-                        resources
-                        if enabled. The format is &lt;code&gt;&amp;lt;name&amp;gt;value&amp;lt;/name&amp;gt;&lt;/code&gt;.
-                    </xs:documentation>
-                </xs:annotation>
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:any minOccurs="0" maxOccurs="unbounded" processContents="skip"/>
-                    </xs:sequence>
-                </xs:complexType>
             </xs:element>
         </xs:sequence>
     </xs:complexType>
