@@ -21,6 +21,14 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
+            <xs:element name="modelVersion" minOccurs="0" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation source="version">4.0.0</xs:documentation>
+                    <xs:documentation source="description">Declares to which version of project descriptor this POM
+                        conforms.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
             <xs:element name="parent" minOccurs="0" type="Parent">
                 <xs:annotation>
                     <xs:documentation source="version">4.0.0</xs:documentation>
@@ -47,14 +55,6 @@
                 <xs:annotation>
                     <xs:documentation source="version">5.0.0+</xs:documentation>
                     <xs:documentation source="description">The GAV coordinates for a 'pom' packaging.</xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="modelVersion" minOccurs="0" type="xs:string">
-                <xs:annotation>
-                    <xs:documentation source="version">4.0.0</xs:documentation>
-                    <xs:documentation source="description">Declares to which version of project descriptor this POM
-                        conforms.
-                    </xs:documentation>
                 </xs:annotation>
             </xs:element>
             <xs:element name="groupId" minOccurs="0" type="xs:string">
