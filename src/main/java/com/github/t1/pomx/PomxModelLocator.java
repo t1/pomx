@@ -15,7 +15,7 @@ import java.nio.file.*;
 
 @Component(role = ModelLocator.class)
 public class PomxModelLocator implements ModelLocator {
-    private static final Path REPOSITORY = Paths.get(System.getProperty("user.home")).resolve(".m2/repository");
+    static final Path REPOSITORY = Paths.get(System.getProperty("user.home")).resolve(".m2/repository");
 
     @Requirement
     Logger log;
@@ -30,24 +30,23 @@ public class PomxModelLocator implements ModelLocator {
             log.info("convert " + pomx + " to " + pom);
             ProjectObjectModel.readFrom(pomx, resolver).writeTo(pom);
         }
-        return new File(dir, "pom.xml");
+        return pom.toFile();
     }
 
 
-    private final Resolver resolver = new Resolver() {
-        @Override
-        @SneakyThrows(ArtifactResolutionException.class)
-        public Path resolve(GAV gav, String type) {
-            RepositorySystemSession session = newRepositorySystemSession();
-            Artifact artifact = new DefaultArtifact(gav.getGroupId(), gav.getArtifactId(), type, gav.getVersion());
-            ArtifactRequest request = new ArtifactRequest();
-            request.setArtifact(artifact);
-            // RemoteRepository central = new RemoteRepository.Builder("central", "default", remoteRepository).build();
-            // request.addRepository(central);
-            ArtifactResult resolved = repositorySystem.resolveArtifact(session, request);
-            return resolved.getArtifact().getFile().toPath();
-        }
-    };
+    private final Resolver resolver = this::resolve;
+
+    @SneakyThrows(ArtifactResolutionException.class)
+    private Path resolve(GAV gav, String type) {
+        RepositorySystemSession session = newRepositorySystemSession();
+        Artifact artifact = new DefaultArtifact(gav.getGroupId(), gav.getArtifactId(), type, gav.getVersion());
+        ArtifactRequest request = new ArtifactRequest();
+        request.setArtifact(artifact);
+        // RemoteRepository central = new RemoteRepository.Builder("central", "default", remoteRepository).build();
+        // request.addRepository(central);
+        ArtifactResult resolved = repositorySystem.resolveArtifact(session, request);
+        return resolved.getArtifact().getFile().toPath();
+    }
 
     private DefaultRepositorySystemSession newRepositorySystemSession() {
         DefaultRepositorySystemSession session = MavenRepositorySystemUtils.newSession();

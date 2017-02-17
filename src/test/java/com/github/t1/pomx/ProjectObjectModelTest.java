@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.io.File;
 import java.nio.file.*;
 
+import static com.github.t1.pomx.PomxModelLocator.*;
 import static org.assertj.core.api.Assertions.*;
 
 public class ProjectObjectModelTest {
@@ -14,6 +15,7 @@ public class ProjectObjectModelTest {
             + "    <groupId>dummy-group</groupId>\n"
             + "    <artifactId>dummy-artifact</artifactId>\n"
             + "    <version>1.2.3-SNAPSHOT</version>\n";
+    private static final Path TEST_REPO = Paths.get("src/test/resources/repository");
 
     private static String warning(Object source) {
         return ""
@@ -21,14 +23,13 @@ public class ProjectObjectModelTest {
                 + "    <!-- Generated from " + source + " -->\n";
     }
 
-    private final Resolver resolver = (gav, type)
-            -> Paths.get("src/test/resources/repository").resolve(gav.asPath(type));
+    private Path resolve(GAV gav, String type) { return TEST_REPO.resolve(gav.asPath(type)); }
 
 
     @Test
     public void shouldLeaveRealPomMoreOrLessAsIs() throws Exception {
         Path path = Paths.get("pom.xml");
-        ProjectObjectModel pom = ProjectObjectModel.readFrom(path, resolver);
+        ProjectObjectModel pom = ProjectObjectModel.readFrom(path, this::resolve);
 
         String xml = pom.asString();
 
@@ -39,7 +40,8 @@ public class ProjectObjectModelTest {
 
     @Test
     public void shouldWritePom() throws Exception {
-        ProjectObjectModel pom = ProjectObjectModel.readFrom(Paths.get("pomx.xml"), resolver);
+        ProjectObjectModel pom = ProjectObjectModel.readFrom(Paths.get("pomx.xml"),
+                (gav, type) -> REPOSITORY.resolve(gav.asPath(type)));
         Path target = Paths.get("target/test-pom.xml");
         try {
             pom.writeTo(target);
@@ -57,7 +59,7 @@ public class ProjectObjectModelTest {
                 + "         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
                 + "         xsi:schemaLocation=\"urn:xsd:maven:pomx:5.0.0 "
                 + "https://raw.githubusercontent.com/t1/pomx/master/src/main/resources/schemas/pomx-5.0.0.xsd\">\n"
-                + "</project>\n", resolver);
+                + "</project>\n", this::resolve);
 
         assertThat(pom.asString()).isEqualTo(XML
                 + "<project xmlns=\"http://maven.apache.org/POM/4.0.0\">\n" + WARNING
@@ -70,7 +72,7 @@ public class ProjectObjectModelTest {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
                 + "<project>\n"
                 + "    <modelVersion>4.0.0</modelVersion>\n"
-                + "</project>\n", resolver);
+                + "</project>\n", this::resolve);
 
         assertThat(pom.asString()).isEqualTo(XML
                 + "<project>\n" + WARNING
@@ -83,7 +85,7 @@ public class ProjectObjectModelTest {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
                 + "<project>\n"
                 + "    <jar>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</jar>\n"
-                + "</project>\n", resolver);
+                + "</project>\n", this::resolve);
 
         assertThat(pom.asString()).isEqualTo(XML
                 + "<project>\n" + WARNING
@@ -98,7 +100,7 @@ public class ProjectObjectModelTest {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
                 + "<project>\n"
                 + "    <pom>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</pom>\n"
-                + "</project>\n", resolver);
+                + "</project>\n", this::resolve);
 
         assertThat(pom.asString()).isEqualTo(XML
                 + "<project>\n" + WARNING
@@ -113,7 +115,7 @@ public class ProjectObjectModelTest {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
                 + "<project>\n"
                 + "    <war>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</war>\n"
-                + "</project>\n", resolver);
+                + "</project>\n", this::resolve);
 
         assertThat(pom.asString()).isEqualTo(XML
                 + "<project>\n" + WARNING
@@ -130,7 +132,7 @@ public class ProjectObjectModelTest {
                         + "<project>\n"
                         + "    <war>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</war>\n"
                         + "    <war>dummy-group2:dummy-artifact2:1.2.3-SNAPSHOT</war>\n"
-                        + "</project>\n", resolver)
+                        + "</project>\n", this::resolve)
                 .asString());
 
         assertThat(throwable).hasMessageContaining("multiple packagings found");
@@ -142,7 +144,7 @@ public class ProjectObjectModelTest {
                 .from(XML
                         + "<project>\n"
                         + "    <war>dummy-group</war>\n"
-                        + "</project>\n", resolver)
+                        + "</project>\n", this::resolve)
                 .asString());
 
         assertThat(throwable).hasMessageContaining("too few elements 1 in GAV expression: 'dummy-group'");
@@ -154,7 +156,7 @@ public class ProjectObjectModelTest {
                 .from(XML
                         + "<project>\n"
                         + "    <war>dummy-group:dummy-artifact</war>\n"
-                        + "</project>\n", resolver)
+                        + "</project>\n", this::resolve)
                 .asString());
 
         assertThat(throwable).hasMessageContaining(
@@ -166,7 +168,7 @@ public class ProjectObjectModelTest {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
                 + "<project>\n"
                 + "    <war>dummy-group:dummy-artifact:mac-os:1.2.3-SNAPSHOT</war>\n"
-                + "</project>\n", resolver);
+                + "</project>\n", this::resolve);
 
         assertThat(pom.asString()).isEqualTo(XML
                 + "<project>\n" + WARNING
@@ -185,7 +187,7 @@ public class ProjectObjectModelTest {
                 .from(XML
                         + "<project>\n"
                         + "    <war>dummy-group:dummy-artifact:mac-os:1.2.3-SNAPSHOT:too-much</war>\n"
-                        + "</project>\n", resolver)
+                        + "</project>\n", this::resolve)
                 .asString());
 
         assertThat(throwable).hasMessageContaining(
@@ -208,7 +210,7 @@ public class ProjectObjectModelTest {
                 + "            </plugin>\n"
                 + "        </plugins>\n"
                 + "    </build>\n"
-                + "</project>\n", resolver);
+                + "</project>\n", this::resolve);
 
         assertThat(pom.asString()).isEqualTo(XML
                 + "<project>\n" + WARNING
@@ -240,7 +242,7 @@ public class ProjectObjectModelTest {
                 + "            <pom>org.jboss.arquillian:arquillian-bom:1.1.11.Final</pom>\n"
                 + "        </dependencies>\n"
                 + "    </dependencyManagement>\n"
-                + "</project>\n", resolver);
+                + "</project>\n", this::resolve);
 
         assertThat(pom.asString()).isEqualTo(XML
                 + "<project>\n" + WARNING
@@ -269,7 +271,7 @@ public class ProjectObjectModelTest {
                 + "            <jar>junit:junit:4.12</jar>\n"
                 + "        </test>\n"
                 + "    </dependencies>\n"
-                + "</project>\n", resolver);
+                + "</project>\n", this::resolve);
 
         assertThat(pom.asString()).isEqualTo(XML
                 + "<project>\n" + WARNING
@@ -295,7 +297,7 @@ public class ProjectObjectModelTest {
                 + "            <jar>org.assertj:assertj-core:3.6.1</jar>\n"
                 + "        </test>\n"
                 + "    </dependencies>\n"
-                + "</project>\n", resolver);
+                + "</project>\n", this::resolve);
 
         assertThat(pom.asString()).isEqualTo(XML
                 + "<project>\n" + WARNING
@@ -329,7 +331,7 @@ public class ProjectObjectModelTest {
                 + "            <jar>org.assertj:assertj-core:3.6.1</jar>\n"
                 + "        </test>\n"
                 + "    </dependencies>\n"
-                + "</project>\n", resolver);
+                + "</project>\n", this::resolve);
 
         assertThat(pom.asString()).isEqualTo(XML
                 + "<project>\n" + WARNING
@@ -357,7 +359,7 @@ public class ProjectObjectModelTest {
                 + "<project>\n"
                 + "    <jar>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</jar>\n"
                 + "    <profile>dummy-group:dummy-profile:1.0</profile>"
-                + "</project>\n", resolver);
+                + "</project>\n", this::resolve);
 
         assertThat(pom.asString()).isEqualTo(XML
                 + "<project>\n" + WARNING

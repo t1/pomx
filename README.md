@@ -65,7 +65,9 @@ Create a file `extensions.xml` in `.mvn` containing:
 ```
 
 Copy your `pom.xml` to `pomx.xml` and stop using the old file... it will be overwritten with every build.
-
+It's required by your IDE and other tools and Maven will install and deploy it normally,
+so Repository managers etc. can use it.
+You don't have to put it under version control, but a fresh checkout would not be properly recognized by your IDE.
 
 
 ## Setup
