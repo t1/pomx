@@ -221,22 +221,27 @@ Profiles can be stored in a repository and referenced in the POMX:
 ```
 
 The profile xml file is resolved like a maven dependency, included into the POM, and activated when run.
-Even though it is a `profile`, the file can have a `project` header like a `pomx`, i.e.:
+Even though it is a `profile`, the file can have a `project` namespace like a `pomx`, i.e.:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
-<project xmlns="http://maven.apache.org/POM/5.0.0">
+<project xmlns="urn:xsd:maven:pomx:5.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="urn:xsd:maven:pomx:5.0.0 https://raw.githubusercontent.com/t1/pomx/master/src/main/resources/schemas/pom-5.0.0.xsd">
     <pom>my.group:my.artifact:1.0</pom>
     ...
 </project>
 ```
 
-In your POM, this profile would have the `<id>my.group:my.artifact</id>` so you can disable it like this:
+In the generated POM, this profile would have the `<id>my.group:my.artifact</id>` so you can disable it like this:
 
 `mvn clean install -P-my.group:my.artifact`
 
 (The colon was chosen for clarity, as '.' and '-' are too common in group and artifact ids)
 
+Some profile elements are removed and not copied into the target profile: `modelVersion`, `groupId`, `artifactId`, `version`, `packaging`, `name`, `description`
+
+Some profile elements are copied into the target `project`, not the profile: `licenses`
+You can't deactivate these elements by deactivating the profile.
 
 # TODO
 

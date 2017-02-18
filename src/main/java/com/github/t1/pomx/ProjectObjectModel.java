@@ -17,8 +17,15 @@ import static java.util.stream.Collectors.*;
 @RequiredArgsConstructor
 class ProjectObjectModel {
     private static final List<String> PACKAGINGS = asList("war", "jar", "pom");
+
+    /** also in README! */
     private static final List<String> PROFILE_NO_COPY_ELEMENTS =
             asList("modelVersion", "groupId", "artifactId", "version", "packaging", "name", "description");
+
+    /** also in README! */
+    private static final List<String> PROFILE_COPY_TO_PROJECT_ELEMENTS =
+            asList("licenses");
+
     private static final List<String> SCOPES = asList("provided", "compile", "runtime", "system", "test");
     private static final String XSD = "http://www.w3.org/2001/XMLSchema-instance";
     private static final String XSI = "xmlns:xsi";
@@ -167,9 +174,19 @@ class ProjectObjectModel {
                ProjectObjectModel.readFrom(resolver.resolve(gav, "xml"), resolver)
                                  .asXml().elements().stream()
                                  .filter(element -> !PROFILE_NO_COPY_ELEMENTS.contains(element.getName()))
-                                 .forEach(target::addNode);
+                                 .forEach(element -> move(element, target));
                source.remove();
            });
+    }
+
+    private void move(XmlElement element, XmlElement target) {
+        if (PROFILE_COPY_TO_PROJECT_ELEMENTS.contains(element.getName())) {
+            target = out.getOrCreateElement(element.getName(), before("profiles"));
+            for (XmlElement sub : element.elements())
+                target.addNode(sub);
+        } else {
+            target.addNode(element);
+        }
     }
 
 

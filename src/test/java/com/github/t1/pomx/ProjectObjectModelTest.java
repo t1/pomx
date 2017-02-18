@@ -375,7 +375,130 @@ public class ProjectObjectModelTest {
                 + "                </property>\n"
                 + "            </activation>\n"
                 + "            <build>\n"
-                + "        <finalName>xxxxx</finalName>\n"
+                + "        <finalName>xxx</finalName>\n"
+                + "    </build>\n"
+                + "        </profile>\n"
+                + "    </profiles>\n"
+                + "</project>\n");
+    }
+
+    @Test
+    public void shouldCopyOneLicenseFromExternalProfile() throws Exception {
+        ProjectObjectModel pom = ProjectObjectModel.from(XML
+                + "<project>\n"
+                + "    <jar>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</jar>\n"
+                + "    <profile>dummy-group:profile-with-license:1.0</profile>"
+                + "</project>\n", this::resolve);
+
+        assertThat(pom.asString()).isEqualTo(XML
+                + "<project>\n" + WARNING
+                + "    <modelVersion>4.0.0</modelVersion>\n"
+                + DUMMY_GAV
+                + "    <packaging>jar</packaging>\n"
+                + "    <licenses>\n"
+                + "        <license>\n"
+                + "            <name>Apache License 2.0</name>\n"
+                + "            <url>https://www.apache.org/licenses/LICENSE-2.0.html</url>\n"
+                + "            <distribution>repo</distribution>\n"
+                + "        </license>\n"
+                + "    </licenses>\n"
+                + "    <profiles>\n"
+                + "        <profile>\n"
+                + "            <id>dummy-group:profile-with-license</id>\n"
+                + "            <activation>\n"
+                + "                <property>\n"
+                + "                    <name>user.dir</name>\n"
+                + "                </property>\n"
+                + "            </activation>\n"
+                + "            <build>\n"
+                + "        <finalName>xxx</finalName>\n"
+                + "    </build>\n"
+                + "        </profile>\n"
+                + "    </profiles>\n"
+                + "</project>\n");
+    }
+
+    @Test
+    public void shouldCopyAddLicensesFromExternalProfile() throws Exception {
+        ProjectObjectModel pom = ProjectObjectModel.from(XML
+                + "<project>\n"
+                + "    <jar>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</jar>\n"
+                + "    <profile>dummy-group:profile-with-license:1.0</profile>"
+                + "    <licenses>\n"
+                + "        <license>\n"
+                + "            <name>MIT</name>\n"
+                + "            <distribution>repo</distribution>\n"
+                + "        </license>\n"
+                + "    </licenses>\n"
+                + "</project>\n", this::resolve);
+
+        assertThat(pom.asString()).isEqualTo(XML
+                + "<project>\n" + WARNING
+                + "    <modelVersion>4.0.0</modelVersion>\n"
+                + DUMMY_GAV
+                + "    <packaging>jar</packaging>"
+                + "    <licenses>\n"
+                + "        <license>\n"
+                + "            <name>MIT</name>\n"
+                + "            <distribution>repo</distribution>\n"
+                + "        </license>\n"
+                + "        <license>\n"
+                + "            <name>Apache License 2.0</name>\n"
+                + "            <url>https://www.apache.org/licenses/LICENSE-2.0.html</url>\n"
+                + "            <distribution>repo</distribution>\n"
+                + "        </license>\n"
+                + "    </licenses>\n"
+                + "\n"
+                + "    <profiles>\n"
+                + "        <profile>\n"
+                + "            <id>dummy-group:profile-with-license</id>\n"
+                + "            <activation>\n"
+                + "                <property>\n"
+                + "                    <name>user.dir</name>\n"
+                + "                </property>\n"
+                + "            </activation>\n"
+                + "            <build>\n"
+                + "        <finalName>xxx</finalName>\n"
+                + "    </build>\n"
+                + "        </profile>\n"
+                + "    </profiles>\n"
+                + "</project>\n");
+    }
+
+    @Test
+    public void shouldCopyTwoLicensesFromExternalProfile() throws Exception {
+        ProjectObjectModel pom = ProjectObjectModel.from(XML
+                + "<project>\n"
+                + "    <jar>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</jar>\n"
+                + "    <profile>dummy-group:profile-with-two-licenses:1.0</profile>"
+                + "</project>\n", this::resolve);
+
+        assertThat(pom.asString()).isEqualTo(XML
+                + "<project>\n" + WARNING
+                + "    <modelVersion>4.0.0</modelVersion>\n"
+                + DUMMY_GAV
+                + "    <packaging>jar</packaging>\n"
+                + "    <licenses>\n"
+                + "        <license>\n"
+                + "            <name>MIT</name>\n"
+                + "            <distribution>repo</distribution>\n"
+                + "        </license>\n"
+                + "        <license>\n"
+                + "            <name>Apache License 2.0</name>\n"
+                + "            <url>https://www.apache.org/licenses/LICENSE-2.0.html</url>\n"
+                + "            <distribution>repo</distribution>\n"
+                + "        </license>\n"
+                + "    </licenses>\n"
+                + "    <profiles>\n"
+                + "        <profile>\n"
+                + "            <id>dummy-group:profile-with-two-licenses</id>\n"
+                + "            <activation>\n"
+                + "                <property>\n"
+                + "                    <name>user.dir</name>\n"
+                + "                </property>\n"
+                + "            </activation>\n"
+                + "            <build>\n"
+                + "        <finalName>xxx</finalName>\n"
                 + "    </build>\n"
                 + "        </profile>\n"
                 + "    </profiles>\n"
