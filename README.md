@@ -243,6 +243,18 @@ Some profile elements are removed and not copied into the target profile: `model
 Some profile elements are merged into the target `project`, not copied into the target profile: `licenses`, `repositories`, `distributionManagement`, `scm`
 You can't deactivate these elements by deactivating the profile.
 
+# Quirk
+
+The order of the elements in a POM xml file is normally free.
+But I wanted to have multiple `profile` elements on the top level,
+and XSDs don't seem to allow `maxOccurs="unbound"` for `xs:any`, so I provisionally used `xs:sequence`,
+which requires the elements to have a fixed order.
+I'm not an XSD expert, so I had planned to learn how to fix this,
+but before I did, I thought that this might be even better.
+It makes orientation in big POMs easier, so ordered the elements supposedly usefully, and still like it.
+It's irritating at times, esp. when you migrate to the new format, but I won't investigate any further.
+
+
 # TODO
 
 External profiles are yet expanded only from your local repository (`~/.m2/repository`).
