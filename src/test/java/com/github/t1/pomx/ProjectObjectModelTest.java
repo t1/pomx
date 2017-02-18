@@ -152,16 +152,19 @@ public class ProjectObjectModelTest {
     }
 
     @Test
-    public void shouldFailToExpandGavWithTwoItems() throws Exception {
-        Throwable throwable = catchThrowable(() -> ProjectObjectModel
-                .from(XML
-                        + "<project>\n"
-                        + "    <war>dummy-group:dummy-artifact</war>\n"
-                        + "</project>\n", this::resolve)
-                .asString());
+    public void shouldExpandGavWithTwoItems() throws Exception {
+        ProjectObjectModel pom = ProjectObjectModel.from(XML
+                + "<project>\n"
+                + "    <war>dummy-group:dummy-artifact</war>\n"
+                + "</project>\n", this::resolve);
 
-        assertThat(throwable).hasMessageContaining(
-                "too few elements 2 in GAV expression: 'dummy-group:dummy-artifact'");
+        assertThat(pom.asString()).isEqualTo(XML
+                + "<project>\n" + WARNING
+                + "    <modelVersion>4.0.0</modelVersion>\n"
+                + "    <groupId>dummy-group</groupId>\n"
+                + "    <artifactId>dummy-artifact</artifactId>\n"
+                + "    <packaging>war</packaging>\n"
+                + "</project>\n");
     }
 
     @Test

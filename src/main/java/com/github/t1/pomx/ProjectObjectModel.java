@@ -97,7 +97,8 @@ class ProjectObjectModel {
                    .filter(XmlElement::hasId)
                    .forEach(plugin -> {
                        GAV gav = GAV.split(plugin.getAttribute("id"));
-                       plugin.addElement("version", atBegin()).addText(gav.getVersion());
+                       if (gav.getVersion() != null)
+                           plugin.addElement("version", atBegin()).addText(gav.getVersion());
                        plugin.addElement("artifactId", atBegin()).addText(gav.getArtifactId());
                        plugin.addElement("groupId", atBegin()).addText(gav.getGroupId());
                        plugin.removeAttribute("id");
@@ -118,7 +119,8 @@ class ProjectObjectModel {
         XmlElement project = packaging.getParent();
         project.addElement("groupId", before(packaging)).addText(gav.getGroupId());
         project.addElement("artifactId", before(packaging)).addText(gav.getArtifactId());
-        project.addElement("version", before(packaging)).addText(gav.getVersion());
+        if (gav.getVersion() != null)
+            project.addElement("version", before(packaging)).addText(gav.getVersion());
         if (gav.getClassifier() != null)
             project.addElement("classifier", before(packaging)).addText(gav.getClassifier());
         project.addElement("packaging", before(packaging)).addText(packaging.getName());
@@ -134,7 +136,8 @@ class ProjectObjectModel {
                        XmlElement element = dependencies.addElement("dependency", before(dependency));
                        element.addElement("groupId").addText(gav.getGroupId());
                        element.addElement("artifactId").addText(gav.getArtifactId());
-                       element.addElement("version").addText(gav.getVersion());
+                       if (gav.getVersion() != null)
+                           element.addElement("version").addText(gav.getVersion());
                        element.addElement("scope").addText("import");
                        element.addElement("type").addText(dependency.getName());
                        dependency.remove();
@@ -154,7 +157,8 @@ class ProjectObjectModel {
                                    XmlElement element = dependencies.addElement("dependency", before(scope));
                                    element.addElement("groupId").addText(gav.getGroupId());
                                    element.addElement("artifactId").addText(gav.getArtifactId());
-                                   element.addElement("version").addText(gav.getVersion());
+                                   if (gav.getVersion() != null)
+                                       element.addElement("version").addText(gav.getVersion());
                                    element.addElement("scope").addText(scope.getName());
                                });
                           scope.remove();
