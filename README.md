@@ -240,7 +240,7 @@ In the generated POM, this profile would have the `<id>my.group:my.artifact</id>
 
 Some profile elements are removed and not copied into the target profile: `modelVersion`, `groupId`, `artifactId`, `version`, `packaging`, `name`, `description`
 
-Some profile elements are copied into the target `project`, not the profile: `licenses`, `repositories`
+Some profile elements are merged into the target `project`, not copied into the target profile: `licenses`, `repositories`, `distributionManagement`
 You can't deactivate these elements by deactivating the profile.
 
 # TODO

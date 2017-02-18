@@ -1,5 +1,6 @@
 package com.github.t1.pomx;
 
+import com.github.t1.xml.Xml;
 import org.junit.Test;
 
 import java.io.File;
@@ -54,12 +55,12 @@ public class ProjectObjectModelTest {
 
     @Test
     public void shouldConvertNamespaceVersionAndAddModelVersion() throws Exception {
-        ProjectObjectModel pom = ProjectObjectModel.from(XML
+        ProjectObjectModel pom = ProjectObjectModel.from(Xml.fromString(XML
                 + "<project xmlns=\"urn:xsd:maven:pomx:5.0.0\"\n"
                 + "         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
                 + "         xsi:schemaLocation=\"urn:xsd:maven:pomx:5.0.0 "
                 + "https://raw.githubusercontent.com/t1/pomx/master/src/main/resources/schemas/pomx-5.0.0.xsd\">\n"
-                + "</project>\n", this::resolve);
+                + "</project>\n"), this::resolve);
 
         assertThat(pom.asString()).isEqualTo(XML
                 + "<project xmlns=\"http://maven.apache.org/POM/4.0.0\">\n" + WARNING
@@ -615,6 +616,77 @@ public class ProjectObjectModelTest {
                 + "    <profiles>\n"
                 + "        <profile>\n"
                 + "            <id>dummy-group:profile-with-two-repositories</id>\n"
+                + "            <activation>\n"
+                + "                <property>\n"
+                + "                    <name>user.dir</name>\n"
+                + "                </property>\n"
+                + "            </activation>\n"
+                + "        </profile>\n"
+                + "    </profiles>\n"
+                + "</project>\n");
+    }
+
+    @Test
+    public void shouldCopyDistributionManagementFromExternalProfile() throws Exception {
+        ProjectObjectModel pom = ProjectObjectModel.from(XML
+                + "<project>\n"
+                + "    <jar>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</jar>\n"
+                + "    <profile>dummy-group:profile-with-distributionManagement:1.0</profile>"
+                + "</project>\n", this::resolve);
+
+        assertThat(pom.asString()).isEqualTo(XML
+                + "<project>\n" + WARNING
+                + "    <modelVersion>4.0.0</modelVersion>\n"
+                + DUMMY_GAV
+                + "    <packaging>jar</packaging>\n"
+                + "    <distributionManagement>\n"
+                + "        <repository>\n"
+                + "            <id>central</id>\n"
+                + "            <name>bintray</name>\n"
+                + "            <url>http://jcenter.bintray.com</url>\n"
+                + "        </repository>\n"
+                + "    </distributionManagement>\n"
+                + "    <profiles>\n"
+                + "        <profile>\n"
+                + "            <id>dummy-group:profile-with-distributionManagement</id>\n"
+                + "            <activation>\n"
+                + "                <property>\n"
+                + "                    <name>user.dir</name>\n"
+                + "                </property>\n"
+                + "            </activation>\n"
+                + "        </profile>\n"
+                + "    </profiles>\n"
+                + "</project>\n");
+    }
+
+    @Test
+    public void shouldMergeDistributionManagementFromExternalProfile() throws Exception {
+        ProjectObjectModel pom = ProjectObjectModel.from(XML
+                + "<project>\n"
+                + "    <jar>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</jar>\n"
+                + "    <profile>dummy-group:profile-with-distributionManagement:1.0</profile>"
+                + "    <distributionManagement>\n"
+                + "        <downloadUrl>http://some.where</downloadUrl>\n\n"
+                + "    </distributionManagement>\n"
+                + "</project>\n", this::resolve);
+
+        assertThat(pom.asString()).isEqualTo(XML
+                + "<project>\n" + WARNING
+                + "    <modelVersion>4.0.0</modelVersion>\n"
+                + DUMMY_GAV
+                + "    <packaging>jar</packaging>"
+                + "    <distributionManagement>\n"
+                + "        <downloadUrl>http://some.where</downloadUrl>\n\n    \n"
+                + "        <repository>\n"
+                + "            <id>central</id>\n"
+                + "            <name>bintray</name>\n"
+                + "            <url>http://jcenter.bintray.com</url>\n"
+                + "        </repository>\n"
+                + "    </distributionManagement>\n"
+                + "\n"
+                + "    <profiles>\n"
+                + "        <profile>\n"
+                + "            <id>dummy-group:profile-with-distributionManagement</id>\n"
                 + "            <activation>\n"
                 + "                <property>\n"
                 + "                    <name>user.dir</name>\n"
