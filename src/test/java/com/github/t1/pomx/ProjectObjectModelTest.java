@@ -419,7 +419,7 @@ public class ProjectObjectModelTest {
     }
 
     @Test
-    public void shouldCopyAddLicensesFromExternalProfile() throws Exception {
+    public void shouldAddLicenseFromExternalProfile() throws Exception {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
                 + "<project>\n"
                 + "    <jar>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</jar>\n"
@@ -500,6 +500,126 @@ public class ProjectObjectModelTest {
                 + "            <build>\n"
                 + "        <finalName>xxx</finalName>\n"
                 + "    </build>\n"
+                + "        </profile>\n"
+                + "    </profiles>\n"
+                + "</project>\n");
+    }
+
+    @Test
+    public void shouldCopyOneRepositoryFromExternalProfile() throws Exception {
+        ProjectObjectModel pom = ProjectObjectModel.from(XML
+                + "<project>\n"
+                + "    <jar>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</jar>\n"
+                + "    <profile>dummy-group:profile-with-repository:1.0</profile>"
+                + "</project>\n", this::resolve);
+
+        assertThat(pom.asString()).isEqualTo(XML
+                + "<project>\n" + WARNING
+                + "    <modelVersion>4.0.0</modelVersion>\n"
+                + DUMMY_GAV
+                + "    <packaging>jar</packaging>\n"
+                + "    <repositories>\n"
+                + "        <repository>\n"
+                + "            <id>central</id>\n"
+                + "            <name>bintray</name>\n"
+                + "            <url>http://jcenter.bintray.com</url>\n"
+                + "        </repository>\n"
+                + "    </repositories>\n"
+                + "    <profiles>\n"
+                + "        <profile>\n"
+                + "            <id>dummy-group:profile-with-repository</id>\n"
+                + "            <activation>\n"
+                + "                <property>\n"
+                + "                    <name>user.dir</name>\n"
+                + "                </property>\n"
+                + "            </activation>\n"
+                + "            <build>\n"
+                + "        <finalName>xxx</finalName>\n"
+                + "    </build>\n"
+                + "        </profile>\n"
+                + "    </profiles>\n"
+                + "</project>\n");
+    }
+
+    @Test
+    public void shouldAddRepositoryFromExternalProfile() throws Exception {
+        ProjectObjectModel pom = ProjectObjectModel.from(XML
+                + "<project>\n"
+                + "    <jar>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</jar>\n"
+                + "    <profile>dummy-group:profile-with-repository:1.0</profile>"
+                + "    <repositories>\n"
+                + "        <repository>\n"
+                + "            <id>other</id>\n"
+                + "            <name>other</name>\n"
+                + "        </repository>\n"
+                + "    </repositories>\n"
+                + "</project>\n", this::resolve);
+
+        assertThat(pom.asString()).isEqualTo(XML
+                + "<project>\n" + WARNING
+                + "    <modelVersion>4.0.0</modelVersion>\n"
+                + DUMMY_GAV
+                + "    <packaging>jar</packaging>"
+                + "    <repositories>\n"
+                + "        <repository>\n"
+                + "            <id>other</id>\n"
+                + "            <name>other</name>\n"
+                + "        </repository>\n"
+                + "        <repository>\n"
+                + "            <id>central</id>\n"
+                + "            <name>bintray</name>\n"
+                + "            <url>http://jcenter.bintray.com</url>\n"
+                + "        </repository>\n"
+                + "    </repositories>\n"
+                + "\n"
+                + "    <profiles>\n"
+                + "        <profile>\n"
+                + "            <id>dummy-group:profile-with-repository</id>\n"
+                + "            <activation>\n"
+                + "                <property>\n"
+                + "                    <name>user.dir</name>\n"
+                + "                </property>\n"
+                + "            </activation>\n"
+                + "            <build>\n"
+                + "        <finalName>xxx</finalName>\n"
+                + "    </build>\n"
+                + "        </profile>\n"
+                + "    </profiles>\n"
+                + "</project>\n");
+    }
+
+    @Test
+    public void shouldCopyTwoRepositoriesFromExternalProfile() throws Exception {
+        ProjectObjectModel pom = ProjectObjectModel.from(XML
+                + "<project>\n"
+                + "    <jar>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</jar>\n"
+                + "    <profile>dummy-group:profile-with-two-repositories:1.0</profile>"
+                + "</project>\n", this::resolve);
+
+        assertThat(pom.asString()).isEqualTo(XML
+                + "<project>\n" + WARNING
+                + "    <modelVersion>4.0.0</modelVersion>\n"
+                + DUMMY_GAV
+                + "    <packaging>jar</packaging>\n"
+                + "    <repositories>\n"
+                + "        <repository>\n"
+                + "            <id>other</id>\n"
+                + "            <name>other</name>\n"
+                + "        </repository>\n"
+                + "        <repository>\n"
+                + "            <id>central</id>\n"
+                + "            <name>bintray</name>\n"
+                + "            <url>http://jcenter.bintray.com</url>\n"
+                + "        </repository>\n"
+                + "    </repositories>\n"
+                + "    <profiles>\n"
+                + "        <profile>\n"
+                + "            <id>dummy-group:profile-with-two-repositories</id>\n"
+                + "            <activation>\n"
+                + "                <property>\n"
+                + "                    <name>user.dir</name>\n"
+                + "                </property>\n"
+                + "            </activation>\n"
                 + "        </profile>\n"
                 + "    </profiles>\n"
                 + "</project>\n");
