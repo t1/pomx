@@ -24,7 +24,7 @@ class ProjectObjectModel {
 
     /** also in README! */
     private static final List<String> PROFILE_COPY_TO_PROJECT_ELEMENTS =
-            asList("licenses", "repositories", "distributionManagement");
+            asList("licenses", "repositories", "distributionManagement", "scm");
 
     private static final List<String> SCOPES = asList("provided", "compile", "runtime", "system", "test");
     private static final String XSD = "http://www.w3.org/2001/XMLSchema-instance";

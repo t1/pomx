@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project xmlns="urn:xsd:maven:pomx:5.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="urn:xsd:maven:pomx:5.0.0 https://raw.githubusercontent.com/t1/pomx/master/src/main/resources/schemas/pomx-5.0.0.xsd">
+    <pom>dummy-group:profile-with-scm:1.0</pom>
+
+    <scm>
+        <developerConnection>scm:git:https://github.com/t1/${project.artifactId}</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+</project>

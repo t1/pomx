@@ -666,7 +666,7 @@ public class ProjectObjectModelTest {
                 + "    <jar>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</jar>\n"
                 + "    <profile>dummy-group:profile-with-distributionManagement:1.0</profile>"
                 + "    <distributionManagement>\n"
-                + "        <downloadUrl>http://some.where</downloadUrl>\n\n"
+                + "        <downloadUrl>http://some.where</downloadUrl>\n"
                 + "    </distributionManagement>\n"
                 + "</project>\n", this::resolve);
 
@@ -676,7 +676,7 @@ public class ProjectObjectModelTest {
                 + DUMMY_GAV
                 + "    <packaging>jar</packaging>"
                 + "    <distributionManagement>\n"
-                + "        <downloadUrl>http://some.where</downloadUrl>\n\n    \n"
+                + "        <downloadUrl>http://some.where</downloadUrl>\n"
                 + "        <repository>\n"
                 + "            <id>central</id>\n"
                 + "            <name>bintray</name>\n"
@@ -687,6 +687,71 @@ public class ProjectObjectModelTest {
                 + "    <profiles>\n"
                 + "        <profile>\n"
                 + "            <id>dummy-group:profile-with-distributionManagement</id>\n"
+                + "            <activation>\n"
+                + "                <property>\n"
+                + "                    <name>user.dir</name>\n"
+                + "                </property>\n"
+                + "            </activation>\n"
+                + "        </profile>\n"
+                + "    </profiles>\n"
+                + "</project>\n");
+    }
+
+    @Test
+    public void shouldCopyScmFromExternalProfile() throws Exception {
+        ProjectObjectModel pom = ProjectObjectModel.from(XML
+                + "<project>\n"
+                + "    <jar>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</jar>\n"
+                + "    <profile>dummy-group:profile-with-scm:1.0</profile>"
+                + "</project>\n", this::resolve);
+
+        assertThat(pom.asString()).isEqualTo(XML
+                + "<project>\n" + WARNING
+                + "    <modelVersion>4.0.0</modelVersion>\n"
+                + DUMMY_GAV
+                + "    <packaging>jar</packaging>\n"
+                + "    <scm>\n"
+                + "        <developerConnection>scm:git:https://github.com/t1/${project.artifactId}</developerConnection>\n"
+                + "        <tag>HEAD</tag>\n"
+                + "    </scm>\n"
+                + "    <profiles>\n"
+                + "        <profile>\n"
+                + "            <id>dummy-group:profile-with-scm</id>\n"
+                + "            <activation>\n"
+                + "                <property>\n"
+                + "                    <name>user.dir</name>\n"
+                + "                </property>\n"
+                + "            </activation>\n"
+                + "        </profile>\n"
+                + "    </profiles>\n"
+                + "</project>\n");
+    }
+
+    @Test
+    public void shouldMergeScmFromExternalProfile() throws Exception {
+        ProjectObjectModel pom = ProjectObjectModel.from(XML
+                + "<project>\n"
+                + "    <jar>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</jar>\n"
+                + "    <profile>dummy-group:profile-with-scm:1.0</profile>"
+                + "    <scm>\n"
+                + "        <url>http://some.where</url>\n"
+                + "    </scm>\n"
+                + "</project>\n", this::resolve);
+
+        assertThat(pom.asString()).isEqualTo(XML
+                + "<project>\n" + WARNING
+                + "    <modelVersion>4.0.0</modelVersion>\n"
+                + DUMMY_GAV
+                + "    <packaging>jar</packaging>"
+                + "    <scm>\n"
+                + "        <url>http://some.where</url>\n"
+                + "        <developerConnection>scm:git:https://github.com/t1/${project.artifactId}</developerConnection>\n"
+                + "        <tag>HEAD</tag>\n"
+                + "    </scm>\n"
+                + "\n"
+                + "    <profiles>\n"
+                + "        <profile>\n"
+                + "            <id>dummy-group:profile-with-scm</id>\n"
                 + "            <activation>\n"
                 + "                <property>\n"
                 + "                    <name>user.dir</name>\n"
