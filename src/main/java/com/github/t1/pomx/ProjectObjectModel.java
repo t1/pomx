@@ -128,12 +128,12 @@ class ProjectObjectModel {
     }
 
     private void expandDependencyManagement() {
-        out.getOptionalElement("dependencyManagement/dependencies")
-           .ifPresent(dependencies -> dependencies
+        out.getOptionalElement("dependencyManagement")
+           .ifPresent(management -> management
                    .find("pom")
                    .forEach(dependency -> {
                        GAV gav = GAV.split(dependency.getText());
-                       XmlElement element = dependencies.addElement("dependency", before(dependency));
+                       XmlElement element = management.getOrCreateElement("dependencies").addElement("dependency");
                        element.addElement("groupId").addText(gav.getGroupId());
                        element.addElement("artifactId").addText(gav.getArtifactId());
                        if (gav.getVersion() != null)

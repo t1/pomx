@@ -242,9 +242,7 @@ public class ProjectObjectModelTest {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
                 + "<project>\n"
                 + "    <dependencyManagement>\n"
-                + "        <dependencies>\n"
-                + "            <pom>org.jboss.arquillian:arquillian-bom:1.1.11.Final</pom>\n"
-                + "        </dependencies>\n"
+                + "        <pom>org.jboss.arquillian:arquillian-bom:1.1.11.Final</pom>\n"
                 + "    </dependencyManagement>\n"
                 + "</project>\n", this::resolve);
 
