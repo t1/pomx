@@ -243,7 +243,11 @@ Some profile elements are removed and not copied into the target profile: `model
 Some profile elements are merged into the target `project`, not copied into the target profile: `licenses`, `repositories`, `distributionManagement`, `scm`
 You can't deactivate these elements by deactivating the profile.
 
-# Quirk
+Finally, a property `<groupId>.<artifactId>.version` is set to the version of every external profile.
+For a use case see the [t1-profile](https://github.com/t1/pomx-profile-t1).
+
+
+# Quirks
 
 The order of the elements in a POM xml file is normally free.
 But I wanted to have multiple `profile` elements on the top level,

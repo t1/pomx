@@ -175,10 +175,15 @@ class ProjectObjectModel {
                target.addElement("id").addText(gav.getGroupId() + ":" + gav.getArtifactId());
                // user.dir is always set, so this activation always triggers
                target.addElement("activation").addElement("property").addElement("name").addText("user.dir");
+
                ProjectObjectModel.readFrom(resolver.resolve(gav, "xml"), resolver)
                                  .asXml().elements().stream()
                                  .filter(element -> !PROFILE_NO_COPY_ELEMENTS.contains(element.getName()))
                                  .forEach(element -> move(element, target));
+
+               String name = gav.getGroupId() + "." + gav.getArtifactId() + ".version";
+               target.getOrCreateElement("properties").addElement(name, atBegin()).addText(gav.getVersion());
+
                source.remove();
            });
     }
@@ -197,7 +202,5 @@ class ProjectObjectModel {
     private Xml asXml() { return converted(); }
 
     @SneakyThrows(IOException.class)
-    void writeTo(Path path) {
-        Files.write(path, asString().getBytes(UTF_8));
-    }
+    void writeTo(Path path) { Files.write(path, asString().getBytes(UTF_8)); }
 }

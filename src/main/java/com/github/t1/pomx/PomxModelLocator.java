@@ -17,11 +17,8 @@ import java.nio.file.*;
 public class PomxModelLocator implements ModelLocator {
     static final Path REPOSITORY = Paths.get(System.getProperty("user.home")).resolve(".m2/repository");
 
-    @Requirement
-    Logger log;
-
-    @Requirement
-    RepositorySystem repositorySystem;
+    @Requirement Logger log;
+    @Requirement RepositorySystem repositorySystem;
 
     @Override public File locatePom(File dir) {
         Path pom = dir.toPath().resolve("pom.xml");

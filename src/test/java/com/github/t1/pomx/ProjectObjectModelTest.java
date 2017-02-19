@@ -379,6 +379,9 @@ public class ProjectObjectModelTest {
                 + "            <build>\n"
                 + "        <finalName>xxx</finalName>\n"
                 + "    </build>\n"
+                + "            <properties>\n"
+                + "                <dummy-group.dummy-profile.version>1.0</dummy-group.dummy-profile.version>\n"
+                + "            </properties>\n"
                 + "        </profile>\n"
                 + "    </profiles>\n"
                 + "</project>\n");
@@ -415,6 +418,9 @@ public class ProjectObjectModelTest {
                 + "            <build>\n"
                 + "        <finalName>xxx</finalName>\n"
                 + "    </build>\n"
+                + "            <properties>\n"
+                + "                <dummy-group.profile-with-license.version>1.0</dummy-group.profile-with-license.version>\n"
+                + "            </properties>\n"
                 + "        </profile>\n"
                 + "    </profiles>\n"
                 + "</project>\n");
@@ -462,6 +468,9 @@ public class ProjectObjectModelTest {
                 + "            <build>\n"
                 + "        <finalName>xxx</finalName>\n"
                 + "    </build>\n"
+                + "            <properties>\n"
+                + "                <dummy-group.profile-with-license.version>1.0</dummy-group.profile-with-license.version>\n"
+                + "            </properties>\n"
                 + "        </profile>\n"
                 + "    </profiles>\n"
                 + "</project>\n");
@@ -502,6 +511,9 @@ public class ProjectObjectModelTest {
                 + "            <build>\n"
                 + "        <finalName>xxx</finalName>\n"
                 + "    </build>\n"
+                + "            <properties>\n"
+                + "                <dummy-group.profile-with-two-licenses.version>1.0</dummy-group.profile-with-two-licenses.version>\n"
+                + "            </properties>\n"
                 + "        </profile>\n"
                 + "    </profiles>\n"
                 + "</project>\n");
@@ -538,6 +550,9 @@ public class ProjectObjectModelTest {
                 + "            <build>\n"
                 + "        <finalName>xxx</finalName>\n"
                 + "    </build>\n"
+                + "            <properties>\n"
+                + "                <dummy-group.profile-with-repository.version>1.0</dummy-group.profile-with-repository.version>\n"
+                + "            </properties>\n"
                 + "        </profile>\n"
                 + "    </profiles>\n"
                 + "</project>\n");
@@ -585,6 +600,9 @@ public class ProjectObjectModelTest {
                 + "            <build>\n"
                 + "        <finalName>xxx</finalName>\n"
                 + "    </build>\n"
+                + "            <properties>\n"
+                + "                <dummy-group.profile-with-repository.version>1.0</dummy-group.profile-with-repository.version>\n"
+                + "            </properties>\n"
                 + "        </profile>\n"
                 + "    </profiles>\n"
                 + "</project>\n");
@@ -622,6 +640,9 @@ public class ProjectObjectModelTest {
                 + "                    <name>user.dir</name>\n"
                 + "                </property>\n"
                 + "            </activation>\n"
+                + "            <properties>\n"
+                + "                <dummy-group.profile-with-two-repositories.version>1.0</dummy-group.profile-with-two-repositories.version>\n"
+                + "            </properties>\n"
                 + "        </profile>\n"
                 + "    </profiles>\n"
                 + "</project>\n");
@@ -655,6 +676,9 @@ public class ProjectObjectModelTest {
                 + "                    <name>user.dir</name>\n"
                 + "                </property>\n"
                 + "            </activation>\n"
+                + "            <properties>\n"
+                + "                <dummy-group.profile-with-distributionManagement.version>1.0</dummy-group.profile-with-distributionManagement.version>\n"
+                + "            </properties>\n"
                 + "        </profile>\n"
                 + "    </profiles>\n"
                 + "</project>\n");
@@ -693,6 +717,9 @@ public class ProjectObjectModelTest {
                 + "                    <name>user.dir</name>\n"
                 + "                </property>\n"
                 + "            </activation>\n"
+                + "            <properties>\n"
+                + "                <dummy-group.profile-with-distributionManagement.version>1.0</dummy-group.profile-with-distributionManagement.version>\n"
+                + "            </properties>\n"
                 + "        </profile>\n"
                 + "    </profiles>\n"
                 + "</project>\n");
@@ -723,6 +750,9 @@ public class ProjectObjectModelTest {
                 + "                    <name>user.dir</name>\n"
                 + "                </property>\n"
                 + "            </activation>\n"
+                + "            <properties>\n"
+                + "                <dummy-group.profile-with-scm.version>1.0</dummy-group.profile-with-scm.version>\n"
+                + "            </properties>\n"
                 + "        </profile>\n"
                 + "    </profiles>\n"
                 + "</project>\n");
@@ -758,6 +788,9 @@ public class ProjectObjectModelTest {
                 + "                    <name>user.dir</name>\n"
                 + "                </property>\n"
                 + "            </activation>\n"
+                + "            <properties>\n"
+                + "                <dummy-group.profile-with-scm.version>1.0</dummy-group.profile-with-scm.version>\n"
+                + "            </properties>\n"
                 + "        </profile>\n"
                 + "    </profiles>\n"
                 + "</project>\n");
