@@ -67,7 +67,9 @@ Create a file `extensions.xml` in `.mvn` containing:
 Copy your `pom.xml` to `pomx.xml` and stop using the old file... it will be overwritten with every build.
 It's required by your IDE and other tools and Maven will install and deploy it normally,
 so Repository managers etc. can use it.
-You don't have to put it under version control, but a fresh checkout would not be properly recognized by your IDE.
+You don't have to put it under version control, but a fresh checkout would not be properly recognized by your IDE;
+and (more importantly) the generated `pom.xml` is the only place
+to see build differences when external SNAPSHOT profiles change.
 
 
 ## Setup
@@ -259,7 +261,7 @@ It makes orientation in big POMs easier, so ordered the elements supposedly usef
 It's irritating at times, esp. when you migrate to the new format, but I won't investigate any further.
 
 
-# TODO
+# Major TODO
 
 External profiles are yet expanded only from your local repository (`~/.m2/repository`).
 So you'll have to fetch them manually before you start the first build:
