@@ -240,6 +240,8 @@ In the generated POM, this profile would have the `<id>my.group:my.artifact</id>
 
 (The colon was chosen for clarity, as '.' and '-' are too common in group and artifact ids)
 
+Note: This will probably change in the future! As the profile may have to be merged completely.
+
 Some profile elements are removed and not copied into the target profile: `modelVersion`, `groupId`, `artifactId`, `version`, `packaging`, `name`, `description`
 
 Some profile elements are merged into the target `project`, not copied into the target profile: `licenses`, `repositories`, `distributionManagement`, `scm`
@@ -261,9 +263,28 @@ It makes orientation in big POMs easier, so ordered the elements supposedly usef
 It's irritating at times, esp. when you migrate to the new format, but I won't investigate any further.
 
 
-# Major TODO
+# Major TODOs
+
+### Download External Profiles
 
 External profiles are yet expanded only from your local repository (`~/.m2/repository`).
 So you'll have to fetch them manually before you start the first build:
 
 `mvn dependency:get -DgroupId=my.group -DartifactId=my.artifact -Dpackaging=xml -Dversion=1.0`
+
+### Compensate For Release Plugin
+
+The release plugin manipulates the `pom.xml`, not the source of truth `pomx`,
+e.g. it sets the version `1.2.3-SNAPSHOT` to `1.2.3`.
+So when it starts the actual build, pomx overwrites the `pom.xml` reverting the version change.
+The build won't properly run.
+
+Im currently unsure how to fix it.
+
+As a manual workaround, I do the following steps:
+- disable the extension (renaming the `.mvn` directory is generally good enough)
+- commit my changes
+- do the release
+- re-enable the extension
+- manually update my `pomx.xml` (mostly update the version)
+- commit these changes
