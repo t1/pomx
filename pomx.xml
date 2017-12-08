@@ -47,20 +47,20 @@
 
     <dependencies>
         <provided>
-            <jar>org.projectlombok:lombok:1.16.14</jar>
+            <jar>org.projectlombok:lombok:1.16.18</jar>
             <jar>org.apache.maven:maven-aether-provider:${maven.version}</jar>
-            <jar>org.apache.maven.resolver:maven-resolver-api:1.0.3</jar>
+            <jar>org.apache.maven.resolver:maven-resolver-api:1.1.0</jar>
         </provided>
 
         <compile>
-            <jar>com.github.t1:xml:0.0.3-SNAPSHOT</jar>
+            <jar>com.github.t1:xml:0.0.5</jar>
         </compile>
 
         <test>
             <jar>junit:junit:4.12</jar>
-            <jar>org.mockito:mockito-core:2.7.6</jar>
+            <jar>org.mockito:mockito-core:2.13.0</jar>
             <jar>com.github.t1:test-tools:1.6.0-SNAPSHOT</jar>
-            <jar>org.assertj:assertj-core:3.6.2</jar>
+            <jar>org.assertj:assertj-core:3.8.0</jar>
         </test>
     </dependencies>
 </project>

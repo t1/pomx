@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0">
+<?xml version="1.0" encoding="UTF-8"?><project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:xsd:maven:pomx:5.0.0 https://raw.githubusercontent.com/t1/pomx/master/src/main/resources/schemas/pomx-5.0.0.xsd">
     <!-- WARNING: Do Not Modify This File! -->
     <!-- Generated from pomx.xml -->
     <modelVersion>4.0.0</modelVersion>
@@ -61,7 +60,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.16.14</version>
+            <version>1.16.18</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -73,14 +72,14 @@
         <dependency>
             <groupId>org.apache.maven.resolver</groupId>
             <artifactId>maven-resolver-api</artifactId>
-            <version>1.0.3</version>
+            <version>1.1.0</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.github.t1</groupId>
             <artifactId>xml</artifactId>
-            <version>0.0.3-SNAPSHOT</version>
+            <version>0.0.5</version>
             <scope>compile</scope>
         </dependency>
 
@@ -93,7 +92,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>2.7.6</version>
+            <version>2.13.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -105,7 +104,7 @@
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-            <version>3.6.2</version>
+            <version>3.8.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -124,7 +123,7 @@
                 <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
                 <maven.compiler.source>1.8</maven.compiler.source>
                 <maven.compiler.target>1.8</maven.compiler.target>
-                <maven.version>3.3.9</maven.version>
+                <maven.version>3.5.2</maven.version>
             </properties>
             <build>
                 <finalName>${project.artifactId}</finalName>
