@@ -6,10 +6,10 @@ to address the issue.
 They support Groovy, Scala, Ruby, Yaml or other file formats, and they may be beneficial to some people,
 but I don't think that XML is the problem, so those other file formats are not guaranteed to be a cure.
 
-XML has reputation for being verbose, because requires you to repeat the name of the opening tag when closing it.
+XML has reputation for being verbose, because it requires you to repeat the name of the opening tag when closing it.
 This actually does add a bit of verbosity, but it's also quite useful to orient in large blocks.
-XML also supports attributes, which require less overhead than JSON!
-Maven POM files just never use them.
+XML also supports attributes, which actually require a little bit less overhead than JSON!
+Maven POM files just never use them!
 Instead of expressing a dependency like this:
 
 ```xml
@@ -28,8 +28,8 @@ A POM could use attributes like this:
 
 The Polyglot project has an XML format that goes exactly this way.
 The other file formats use an even more compact format by simply separating the GAV fields with colons.
-This is less explicit, but the GAV coordinates are common enough, nowadays.
-In XML this could look like this:
+This is less explicit, but the GAV coordinates are ubiquitous enough, nowadays, so everybody will easily understand them.
+Such a compact notation could be used in XML, too, and it would look like this:
 
 ```xml
 <dependency>ch.qos.logback:logback-classic:1.2.1</dependency>
@@ -38,12 +38,12 @@ In XML this could look like this:
 While this makes the syntax more concise, the real benefit other languages _can_ provide (if used properly),
 is to reduce the repetition in you build files - Don't Repeat Yourself or DRY.
 By leveraging reuse, build files don't just get more concise,
-they also get more uniform (by reducing the snowflake effect)
+they also get more uniform (by reducing the snowflake effect: every snow crystal is different)
 and more expressive (if you can find a solid abstraction with a clear name).
 I.e. if you want e.g. a Java EE 7 WAR, you should only specify that this is what you want,
 and the know-how required to build it, the dependencies, the Java compiler setting, the properties, etc.
 is expressed once-and-only-once in a file in the repository. We can do that with XML.
-In this project, I do so by allowing profiles to be defined in Maven repository files.
+POMX does so by allowing profiles to be defined in Maven repository files.
 
 Xml is not the problem.
 
@@ -68,8 +68,8 @@ Copy your `pom.xml` to `pomx.xml` and stop using the old file... it will be over
 It's required by your IDE and other tools and Maven will install and deploy it normally,
 so Repository managers etc. can use it.
 You don't have to put it under version control, but a fresh checkout would not be properly recognized by your IDE;
-and (more importantly) the generated `pom.xml` is the only place
-to see build differences when external SNAPSHOT profiles change.
+and the generated `pom.xml` is the only place to see build differences when external SNAPSHOT profiles change.
+So it's a good practice to check the `pom.xml` into your SCM.
 
 
 ## Setup
@@ -223,6 +223,9 @@ Profiles can be stored in a repository and referenced in the POMX:
 ```
 
 The profile xml file is resolved like a maven dependency, included into the POM, and activated when run.
+
+This feature is similar to [maven tiles](https://github.com/repaint-io/maven-tiles).
+
 Even though it is a `profile`, the file can have a `project` namespace like a `pomx`, i.e.:
 
 ```xml
@@ -244,7 +247,7 @@ Note: This will probably change in the future! As the profile may have to be mer
 
 Some profile elements are removed and not copied into the target profile: `modelVersion`, `groupId`, `artifactId`, `version`, `packaging`, `name`, `description`
 
-Some profile elements are merged into the target `project`, not copied into the target profile: `licenses`, `repositories`, `distributionManagement`, `scm`
+Some profile elements are merged into the target `project`, not copied into the target profile: `licenses`, `repositories`, `distributionManagement`, `scm`, and `profiles`
 You can't deactivate these elements by deactivating the profile.
 
 Finally, a property `<groupId>.<artifactId>.version` is set to the version of every external profile.
@@ -288,3 +291,8 @@ As a manual workaround, I do the following steps:
 - re-enable the extension
 - manually update my `pomx.xml` (mostly update the version)
 - commit these changes
+
+# Ideas
+
+- Scan for `modules`, i.e. look at all direct directories, if they include a `pomx.xml`,
+and add them to the `modules` in the parent. This is then recursive for those modules.

@@ -28,7 +28,7 @@ public class ProjectObjectModelTest {
 
 
     @Test
-    public void shouldLeaveRealPomMoreOrLessAsIs() throws Exception {
+    public void shouldLeaveRealPomMoreOrLessAsIs() {
         Path path = Paths.get("pom.xml");
         ProjectObjectModel pom = ProjectObjectModel.readFrom(path, this::resolve);
 
@@ -54,7 +54,7 @@ public class ProjectObjectModelTest {
     }
 
     @Test
-    public void shouldConvertNamespaceVersionAndAddModelVersion() throws Exception {
+    public void shouldConvertNamespaceVersionAndAddModelVersion() {
         ProjectObjectModel pom = ProjectObjectModel.from(Xml.fromString(XML
                 + "<project xmlns=\"urn:xsd:maven:pomx:5.0.0\"\n"
                 + "         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
@@ -69,7 +69,7 @@ public class ProjectObjectModelTest {
     }
 
     @Test
-    public void shouldNotAddModelVersionIfAlreadyThere() throws Exception {
+    public void shouldNotAddModelVersionIfAlreadyThere() {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
                 + "<project>\n"
                 + "    <modelVersion>4.0.0</modelVersion>\n"
@@ -82,7 +82,7 @@ public class ProjectObjectModelTest {
     }
 
     @Test
-    public void shouldExpandJarGAV() throws Exception {
+    public void shouldExpandJarGAV() {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
                 + "<project>\n"
                 + "    <jar>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</jar>\n"
@@ -97,7 +97,7 @@ public class ProjectObjectModelTest {
     }
 
     @Test
-    public void shouldExpandPomGAV() throws Exception {
+    public void shouldExpandPomGAV() {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
                 + "<project>\n"
                 + "    <pom>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</pom>\n"
@@ -112,7 +112,7 @@ public class ProjectObjectModelTest {
     }
 
     @Test
-    public void shouldExpandWarGAV() throws Exception {
+    public void shouldExpandWarGAV() {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
                 + "<project>\n"
                 + "    <war>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</war>\n"
@@ -127,7 +127,7 @@ public class ProjectObjectModelTest {
     }
 
     @Test
-    public void shouldFailToExpandMultipleGAV() throws Exception {
+    public void shouldFailToExpandMultipleGAV() {
         Throwable throwable = catchThrowable(() -> ProjectObjectModel
                 .from(XML
                         + "<project>\n"
@@ -140,7 +140,7 @@ public class ProjectObjectModelTest {
     }
 
     @Test
-    public void shouldFailToExpandGavWithOneItem() throws Exception {
+    public void shouldFailToExpandGavWithOneItem() {
         Throwable throwable = catchThrowable(() -> ProjectObjectModel
                 .from(XML
                         + "<project>\n"
@@ -152,7 +152,7 @@ public class ProjectObjectModelTest {
     }
 
     @Test
-    public void shouldExpandGavWithTwoItems() throws Exception {
+    public void shouldExpandGavWithTwoItems() {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
                 + "<project>\n"
                 + "    <war>dummy-group:dummy-artifact</war>\n"
@@ -168,7 +168,7 @@ public class ProjectObjectModelTest {
     }
 
     @Test
-    public void shouldExpandGACV() throws Exception {
+    public void shouldExpandGACV() {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
                 + "<project>\n"
                 + "    <war>dummy-group:dummy-artifact:mac-os:1.2.3-SNAPSHOT</war>\n"
@@ -186,7 +186,7 @@ public class ProjectObjectModelTest {
     }
 
     @Test
-    public void shouldFailToExpandGavWithFiveItems() throws Exception {
+    public void shouldFailToExpandGavWithFiveItems() {
         Throwable throwable = catchThrowable(() -> ProjectObjectModel
                 .from(XML
                         + "<project>\n"
@@ -200,7 +200,7 @@ public class ProjectObjectModelTest {
 
 
     @Test
-    public void shouldExpandBuildPlugin() throws Exception {
+    public void shouldExpandBuildPlugin() {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
                 + "<project>\n"
                 + "    <build>\n"
@@ -238,7 +238,7 @@ public class ProjectObjectModelTest {
 
 
     @Test
-    public void shouldExpandDependencyManagement() throws Exception {
+    public void shouldExpandDependencyManagement() {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
                 + "<project>\n"
                 + "    <dependencyManagement>\n"
@@ -265,7 +265,7 @@ public class ProjectObjectModelTest {
 
 
     @Test
-    public void shouldExpandTestDependency() throws Exception {
+    public void shouldExpandTestDependency() {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
                 + "<project>\n"
                 + "    <dependencies>\n"
@@ -290,7 +290,7 @@ public class ProjectObjectModelTest {
     }
 
     @Test
-    public void shouldExpandTwoTestDependencies() throws Exception {
+    public void shouldExpandTwoTestDependencies() {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
                 + "<project>\n"
                 + "    <dependencies>\n"
@@ -322,7 +322,7 @@ public class ProjectObjectModelTest {
     }
 
     @Test
-    public void shouldExpandTwoScopeDependencies() throws Exception {
+    public void shouldExpandTwoScopeDependencies() {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
                 + "<project>\n"
                 + "    <dependencies>\n"
@@ -356,7 +356,7 @@ public class ProjectObjectModelTest {
     }
 
     @Test
-    public void shouldExpandExternalProfile() throws Exception {
+    public void shouldExpandExternalProfile() {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
                 + "<project>\n"
                 + "    <jar>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</jar>\n"
@@ -376,19 +376,19 @@ public class ProjectObjectModelTest {
                 + "                    <name>user.dir</name>\n"
                 + "                </property>\n"
                 + "            </activation>\n"
-                + "            <build>\n"
-                + "        <finalName>xxx</finalName>\n"
-                + "    </build>\n"
                 + "            <properties>\n"
                 + "                <dummy-group.dummy-profile.version>1.0</dummy-group.dummy-profile.version>\n"
                 + "            </properties>\n"
+                + "            <build>\n"
+                + "                <finalName>xxx</finalName>\n"
+                + "            </build>\n"
                 + "        </profile>\n"
                 + "    </profiles>\n"
                 + "</project>\n");
     }
 
     @Test
-    public void shouldCopyOneLicenseFromExternalProfile() throws Exception {
+    public void shouldCopyOneLicenseFromExternalProfile() {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
                 + "<project>\n"
                 + "    <jar>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</jar>\n"
@@ -415,19 +415,19 @@ public class ProjectObjectModelTest {
                 + "                    <name>user.dir</name>\n"
                 + "                </property>\n"
                 + "            </activation>\n"
-                + "            <build>\n"
-                + "        <finalName>xxx</finalName>\n"
-                + "    </build>\n"
                 + "            <properties>\n"
                 + "                <dummy-group.profile-with-license.version>1.0</dummy-group.profile-with-license.version>\n"
                 + "            </properties>\n"
+                + "            <build>\n"
+                + "                <finalName>xxx</finalName>\n"
+                + "            </build>\n"
                 + "        </profile>\n"
                 + "    </profiles>\n"
                 + "</project>\n");
     }
 
     @Test
-    public void shouldAddLicenseFromExternalProfile() throws Exception {
+    public void shouldAddLicenseFromExternalProfile() {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
                 + "<project>\n"
                 + "    <jar>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</jar>\n"
@@ -465,19 +465,19 @@ public class ProjectObjectModelTest {
                 + "                    <name>user.dir</name>\n"
                 + "                </property>\n"
                 + "            </activation>\n"
-                + "            <build>\n"
-                + "        <finalName>xxx</finalName>\n"
-                + "    </build>\n"
                 + "            <properties>\n"
                 + "                <dummy-group.profile-with-license.version>1.0</dummy-group.profile-with-license.version>\n"
                 + "            </properties>\n"
+                + "            <build>\n"
+                + "                <finalName>xxx</finalName>\n"
+                + "            </build>\n"
                 + "        </profile>\n"
                 + "    </profiles>\n"
                 + "</project>\n");
     }
 
     @Test
-    public void shouldCopyTwoLicensesFromExternalProfile() throws Exception {
+    public void shouldCopyTwoLicensesFromExternalProfile() {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
                 + "<project>\n"
                 + "    <jar>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</jar>\n"
@@ -508,19 +508,19 @@ public class ProjectObjectModelTest {
                 + "                    <name>user.dir</name>\n"
                 + "                </property>\n"
                 + "            </activation>\n"
-                + "            <build>\n"
-                + "        <finalName>xxx</finalName>\n"
-                + "    </build>\n"
                 + "            <properties>\n"
                 + "                <dummy-group.profile-with-two-licenses.version>1.0</dummy-group.profile-with-two-licenses.version>\n"
                 + "            </properties>\n"
+                + "            <build>\n"
+                + "                <finalName>xxx</finalName>\n"
+                + "            </build>\n"
                 + "        </profile>\n"
                 + "    </profiles>\n"
                 + "</project>\n");
     }
 
     @Test
-    public void shouldCopyOneRepositoryFromExternalProfile() throws Exception {
+    public void shouldCopyOneRepositoryFromExternalProfile() {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
                 + "<project>\n"
                 + "    <jar>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</jar>\n"
@@ -547,19 +547,19 @@ public class ProjectObjectModelTest {
                 + "                    <name>user.dir</name>\n"
                 + "                </property>\n"
                 + "            </activation>\n"
-                + "            <build>\n"
-                + "        <finalName>xxx</finalName>\n"
-                + "    </build>\n"
                 + "            <properties>\n"
                 + "                <dummy-group.profile-with-repository.version>1.0</dummy-group.profile-with-repository.version>\n"
                 + "            </properties>\n"
+                + "            <build>\n"
+                + "                <finalName>xxx</finalName>\n"
+                + "            </build>\n"
                 + "        </profile>\n"
                 + "    </profiles>\n"
                 + "</project>\n");
     }
 
     @Test
-    public void shouldAddRepositoryFromExternalProfile() throws Exception {
+    public void shouldAddRepositoryFromExternalProfile() {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
                 + "<project>\n"
                 + "    <jar>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</jar>\n"
@@ -597,19 +597,19 @@ public class ProjectObjectModelTest {
                 + "                    <name>user.dir</name>\n"
                 + "                </property>\n"
                 + "            </activation>\n"
-                + "            <build>\n"
-                + "        <finalName>xxx</finalName>\n"
-                + "    </build>\n"
                 + "            <properties>\n"
                 + "                <dummy-group.profile-with-repository.version>1.0</dummy-group.profile-with-repository.version>\n"
                 + "            </properties>\n"
+                + "            <build>\n"
+                + "                <finalName>xxx</finalName>\n"
+                + "            </build>\n"
                 + "        </profile>\n"
                 + "    </profiles>\n"
                 + "</project>\n");
     }
 
     @Test
-    public void shouldCopyTwoRepositoriesFromExternalProfile() throws Exception {
+    public void shouldCopyTwoRepositoriesFromExternalProfile() {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
                 + "<project>\n"
                 + "    <jar>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</jar>\n"
@@ -649,7 +649,7 @@ public class ProjectObjectModelTest {
     }
 
     @Test
-    public void shouldCopyDistributionManagementFromExternalProfile() throws Exception {
+    public void shouldCopyDistributionManagementFromExternalProfile() {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
                 + "<project>\n"
                 + "    <jar>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</jar>\n"
@@ -685,7 +685,7 @@ public class ProjectObjectModelTest {
     }
 
     @Test
-    public void shouldMergeDistributionManagementFromExternalProfile() throws Exception {
+    public void shouldMergeDistributionManagementFromExternalProfile() {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
                 + "<project>\n"
                 + "    <jar>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</jar>\n"
@@ -726,7 +726,7 @@ public class ProjectObjectModelTest {
     }
 
     @Test
-    public void shouldCopyScmFromExternalProfile() throws Exception {
+    public void shouldCopyScmFromExternalProfile() {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
                 + "<project>\n"
                 + "    <jar>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</jar>\n"
@@ -759,7 +759,7 @@ public class ProjectObjectModelTest {
     }
 
     @Test
-    public void shouldMergeScmFromExternalProfile() throws Exception {
+    public void shouldMergeScmFromExternalProfile() {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
                 + "<project>\n"
                 + "    <jar>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</jar>\n"
@@ -791,6 +791,50 @@ public class ProjectObjectModelTest {
                 + "            <properties>\n"
                 + "                <dummy-group.profile-with-scm.version>1.0</dummy-group.profile-with-scm.version>\n"
                 + "            </properties>\n"
+                + "        </profile>\n"
+                + "    </profiles>\n"
+                + "</project>\n");
+    }
+
+    @Test
+    public void shouldAddNestedExternalProfile() {
+        ProjectObjectModel pom = ProjectObjectModel.from(XML
+                + "<project>\n"
+                + "    <jar>dummy-group:dummy-artifact:1.2.3-SNAPSHOT</jar>\n"
+                + "    <profile>dummy-group:profile-with-nested-profile:1.0</profile>"
+                + "</project>\n", this::resolve);
+
+        assertThat(pom.asString()).isEqualTo(XML
+                + "<project>\n" + WARNING
+                + "    <modelVersion>4.0.0</modelVersion>\n"
+                + DUMMY_GAV
+                + "    <packaging>jar</packaging>"
+                + "\n"
+                + "    <profiles>\n"
+                + "        <profile>\n"
+                + "            <id>dummy-group:profile-with-nested-profile</id>\n"
+                + "            <activation>\n"
+                + "                <property>\n"
+                + "                    <name>user.dir</name>\n"
+                + "                </property>\n"
+                + "            </activation>\n"
+                + "            <properties>\n"
+                + "                <dummy-group.profile-with-nested-profile.version>1.0</dummy-group.profile-with-nested-profile.version>\n"
+                + "            </properties>\n"
+                + "        </profile>\n"
+                + "        <profile>\n"
+                + "            <id>dummy-group:dummy-profile</id>\n"
+                + "            <activation>\n"
+                + "                <property>\n"
+                + "                    <name>user.dir</name>\n"
+                + "                </property>\n"
+                + "            </activation>\n"
+                + "            <properties>\n"
+                + "                <dummy-group.dummy-profile.version>1.0</dummy-group.dummy-profile.version>\n"
+                + "            </properties>\n"
+                + "            <build>\n"
+                + "                <finalName>xxx</finalName>\n"
+                + "            </build>\n"
                 + "        </profile>\n"
                 + "    </profiles>\n"
                 + "</project>\n");

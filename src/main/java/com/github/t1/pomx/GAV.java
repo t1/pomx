@@ -1,11 +1,10 @@
 package com.github.t1.pomx;
 
-import lombok.*;
+import lombok.Value;
 
 import java.nio.file.*;
 
-@Getter
-@RequiredArgsConstructor
+@Value
 class GAV {
     private final String groupId;
     private final String artifactId;

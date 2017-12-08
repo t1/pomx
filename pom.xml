@@ -35,6 +35,25 @@
                     <timestampedReports>false</timestampedReports>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.7.10-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -80,7 +99,7 @@
         <dependency>
             <groupId>com.github.t1</groupId>
             <artifactId>test-tools</artifactId>
-            <version>1.5.0</version>
+            <version>1.6.0-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -101,15 +120,15 @@
             </activation>
             <properties>
                 <com.github.t1.maven-extension.version>3.3.9-SNAPSHOT</com.github.t1.maven-extension.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <maven.version>3.3.9</maven.version>
-    </properties>
+                <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+                <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+                <maven.compiler.source>1.8</maven.compiler.source>
+                <maven.compiler.target>1.8</maven.compiler.target>
+                <maven.version>3.3.9</maven.version>
+            </properties>
             <build>
-        <finalName>${project.artifactId}</finalName>
-        <plugins>
+                <finalName>${project.artifactId}</finalName>
+                <plugins>
             <plugin>
                 <groupId>org.codehaus.plexus</groupId>
                 <artifactId>plexus-component-metadata</artifactId>
@@ -145,33 +164,33 @@
                 <version>2.9.1</version>
             </plugin>
         </plugins>
-    </build>
+            </build>
             <dependencies>
-        <dependency>
+                <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-core</artifactId>
             <version>${maven.version}</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
+                <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-model</artifactId>
             <version>${maven.version}</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
+                <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-model-builder</artifactId>
             <version>${maven.version}</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
+                <dependency>
             <groupId>org.eclipse.sisu</groupId>
             <artifactId>org.eclipse.sisu.plexus</artifactId>
             <version>0.3.3</version>
             <scope>provided</scope>
         </dependency>
-    </dependencies>
+            </dependencies>
         </profile>
     </profiles>
 </project>

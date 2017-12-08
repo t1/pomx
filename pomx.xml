@@ -26,6 +26,22 @@
                     <timestampedReports>false</timestampedReports>
                 </configuration>
             </plugin>
+            <plugin id="org.jacoco:jacoco-maven-plugin:0.7.10-SNAPSHOT">
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -43,7 +59,7 @@
         <test>
             <jar>junit:junit:4.12</jar>
             <jar>org.mockito:mockito-core:2.7.6</jar>
-            <jar>com.github.t1:test-tools:1.5.0</jar>
+            <jar>com.github.t1:test-tools:1.6.0-SNAPSHOT</jar>
             <jar>org.assertj:assertj-core:3.6.2</jar>
         </test>
     </dependencies>

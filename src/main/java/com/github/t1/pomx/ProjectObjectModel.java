@@ -1,7 +1,6 @@
 package com.github.t1.pomx;
 
 import com.github.t1.xml.*;
-import com.github.t1.xml.XmlElement;
 import lombok.*;
 
 import java.io.IOException;
@@ -24,7 +23,7 @@ class ProjectObjectModel {
 
     /** also in README! */
     private static final List<String> PROFILE_COPY_TO_PROJECT_ELEMENTS =
-            asList("licenses", "repositories", "distributionManagement", "scm");
+            asList("licenses", "repositories", "distributionManagement", "scm", "profiles");
 
     private static final List<String> SCOPES = asList("provided", "compile", "runtime", "system", "test");
     private static final String XSD = "http://www.w3.org/2001/XMLSchema-instance";
@@ -171,31 +170,29 @@ class ProjectObjectModel {
         out.find("profile")
            .forEach(source -> {
                GAV gav = GAV.split(source.getText());
+               source.remove();
+
                XmlElement target = out.getOrCreateElement("profiles").addElement("profile");
                target.addElement("id").addText(gav.getGroupId() + ":" + gav.getArtifactId());
                // user.dir is always set, so this activation always triggers
                target.addElement("activation").addElement("property").addElement("name").addText("user.dir");
 
-               ProjectObjectModel.readFrom(resolver.resolve(gav, "xml"), resolver)
-                                 .asXml().elements().stream()
-                                 .filter(element -> !PROFILE_NO_COPY_ELEMENTS.contains(element.getName()))
-                                 .forEach(element -> move(element, target));
-
                String name = gav.getGroupId() + "." + gav.getArtifactId() + ".version";
                target.getOrCreateElement("properties").addElement(name, atBegin()).addText(gav.getVersion());
 
-               source.remove();
+               List<XmlElement> elements = readFrom(resolver.resolve(gav, "xml"), resolver).asXml().elements();
+               elements.stream()
+                       .filter(element -> !PROFILE_NO_COPY_ELEMENTS.contains(element.getName()))
+                       .forEach(element -> move(element, target));
            });
     }
 
     private void move(XmlElement element, XmlElement target) {
-        if (PROFILE_COPY_TO_PROJECT_ELEMENTS.contains(element.getName())) {
-            target = out.getOrCreateElement(element.getName(), before("profiles"));
-            for (XmlElement sub : element.elements())
-                target.addNode(sub);
-        } else {
-            target.addNode(element);
-        }
+        XmlElement parent = PROFILE_COPY_TO_PROJECT_ELEMENTS.contains(element.getName())
+                ? out.getOrCreateElement(element.getName(), before("profiles"))
+                : target.getOrCreateElement(element.getName());
+        for (XmlElement sub : element.elements())
+            parent.addNode(sub);
     }
 
 

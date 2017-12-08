@@ -25,13 +25,11 @@ public class PomxModelLocator implements ModelLocator {
         Path pomx = dir.toPath().resolve("pomx.xml");
         if (Files.exists(pomx)) {
             log.info("convert " + pomx + " to " + pom);
-            ProjectObjectModel.readFrom(pomx, resolver).writeTo(pom);
+            ProjectObjectModel.readFrom(pomx, this::resolve).writeTo(pom);
         }
         return pom.toFile();
     }
 
-
-    private final Resolver resolver = this::resolve;
 
     @SneakyThrows(ArtifactResolutionException.class)
     private Path resolve(GAV gav, String type) {
@@ -50,9 +48,6 @@ public class PomxModelLocator implements ModelLocator {
 
         LocalRepository localRepo = new LocalRepository(REPOSITORY.toFile());
         session.setLocalRepositoryManager(repositorySystem.newLocalRepositoryManager(session, localRepo));
-
-        // session.setTransferListener(new ConsoleTransferListener());
-        // session.setRepositoryListener(new ConsoleRepositoryListener());
 
         // uncomment to generate dirty trees
         // session.setDependencyGraphTransformer( null );
