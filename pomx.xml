@@ -48,7 +48,7 @@
     <dependencies>
         <provided>
             <jar>org.projectlombok:lombok:1.16.18</jar>
-            <jar>org.apache.maven:maven-aether-provider:${maven.version}</jar>
+            <jar>org.apache.maven:maven-aether-provider:3.3.9</jar>
             <jar>org.apache.maven.resolver:maven-resolver-api:1.1.0</jar>
         </provided>
 
