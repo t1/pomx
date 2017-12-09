@@ -5,18 +5,23 @@ import org.junit.Test;
 
 import java.io.File;
 import java.nio.file.*;
+import java.util.function.Function;
 
 import static com.github.t1.pomx.PomxModelLocator.*;
 import static org.assertj.core.api.Assertions.*;
 
 public class ProjectObjectModelTest {
-    private static final String XML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-    private static final String WARNING = warning("nil:--");
+    private static final String XML = ifJdk9("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n", String::trim);
+    private static final String WARNING = warning(ifJdk9("nil:--", t -> "nil:- -"));
     private static final String DUMMY_GAV = ""
             + "    <groupId>dummy-group</groupId>\n"
             + "    <artifactId>dummy-artifact</artifactId>\n"
             + "    <version>1.2.3-SNAPSHOT</version>\n";
     private static final Path TEST_REPO = Paths.get("src/test/resources/repository");
+
+    private static <T> T ifJdk9(T t, Function<T, T> function) {
+        return Double.parseDouble(System.getProperty("java.specification.version")) >= 9.0 ? function.apply(t) : t;
+    }
 
     private static String warning(Object source) {
         return ""
@@ -63,7 +68,13 @@ public class ProjectObjectModelTest {
                 + "</project>\n"), this::resolve);
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project xmlns=\"http://maven.apache.org/POM/4.0.0\">\n" + WARNING
+                + "<project "
+                + ifJdk9("xmlns=\"http://maven.apache.org/POM/4.0.0\"",
+                x -> "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
+                        + "xsi:schemaLocation=\"urn:xsd:maven:pomx:5.0.0 "
+                        + "https://raw.githubusercontent.com/t1/pomx/master/src/main/resources/schemas/pomx-5.0.0.xsd\"")
+                + ">\n"
+                + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + "</project>\n");
     }
@@ -76,7 +87,8 @@ public class ProjectObjectModelTest {
                 + "</project>\n", this::resolve);
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project>\n" + WARNING
+                + "<project>\n"
+                + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + "</project>\n");
     }
@@ -89,7 +101,8 @@ public class ProjectObjectModelTest {
                 + "</project>\n", this::resolve);
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project>\n" + WARNING
+                + "<project>\n"
+                + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + DUMMY_GAV
                 + "    <packaging>jar</packaging>\n"
@@ -104,7 +117,8 @@ public class ProjectObjectModelTest {
                 + "</project>\n", this::resolve);
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project>\n" + WARNING
+                + "<project>\n"
+                + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + DUMMY_GAV
                 + "    <packaging>pom</packaging>\n"
@@ -119,7 +133,8 @@ public class ProjectObjectModelTest {
                 + "</project>\n", this::resolve);
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project>\n" + WARNING
+                + "<project>\n"
+                + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + DUMMY_GAV
                 + "    <packaging>war</packaging>\n"
@@ -159,7 +174,8 @@ public class ProjectObjectModelTest {
                 + "</project>\n", this::resolve);
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project>\n" + WARNING
+                + "<project>\n"
+                + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + "    <groupId>dummy-group</groupId>\n"
                 + "    <artifactId>dummy-artifact</artifactId>\n"
@@ -175,7 +191,8 @@ public class ProjectObjectModelTest {
                 + "</project>\n", this::resolve);
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project>\n" + WARNING
+                + "<project>\n"
+                + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + "    <groupId>dummy-group</groupId>\n"
                 + "    <artifactId>dummy-artifact</artifactId>\n"
@@ -217,7 +234,8 @@ public class ProjectObjectModelTest {
                 + "</project>\n", this::resolve);
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project>\n" + WARNING
+                + "<project>\n"
+                + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + "    <build>\n"
                 + "        <plugins>\n"
@@ -247,7 +265,8 @@ public class ProjectObjectModelTest {
                 + "</project>\n", this::resolve);
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project>\n" + WARNING
+                + "<project>\n"
+                + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + "    <dependencyManagement>\n"
                 + "        <dependencies>\n"
@@ -276,7 +295,8 @@ public class ProjectObjectModelTest {
                 + "</project>\n", this::resolve);
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project>\n" + WARNING
+                + "<project>\n"
+                + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + "    <dependencies>\n"
                 + "        <dependency>\n"
@@ -302,7 +322,8 @@ public class ProjectObjectModelTest {
                 + "</project>\n", this::resolve);
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project>\n" + WARNING
+                + "<project>\n"
+                + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + "    <dependencies>\n"
                 + "        <dependency>\n"
@@ -336,7 +357,8 @@ public class ProjectObjectModelTest {
                 + "</project>\n", this::resolve);
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project>\n" + WARNING
+                + "<project>\n"
+                + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + "    <dependencies>\n"
                 + "        <dependency>\n"
@@ -364,7 +386,8 @@ public class ProjectObjectModelTest {
                 + "</project>\n", this::resolve);
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project>\n" + WARNING
+                + "<project>\n"
+                + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + DUMMY_GAV
                 + "    <packaging>jar</packaging>\n"
@@ -396,7 +419,8 @@ public class ProjectObjectModelTest {
                 + "</project>\n", this::resolve);
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project>\n" + WARNING
+                + "<project>\n"
+                + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + DUMMY_GAV
                 + "    <packaging>jar</packaging>\n"
@@ -441,7 +465,8 @@ public class ProjectObjectModelTest {
                 + "</project>\n", this::resolve);
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project>\n" + WARNING
+                + "<project>\n"
+                + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + DUMMY_GAV
                 + "    <packaging>jar</packaging>"
@@ -485,7 +510,8 @@ public class ProjectObjectModelTest {
                 + "</project>\n", this::resolve);
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project>\n" + WARNING
+                + "<project>\n"
+                + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + DUMMY_GAV
                 + "    <packaging>jar</packaging>\n"
@@ -528,7 +554,8 @@ public class ProjectObjectModelTest {
                 + "</project>\n", this::resolve);
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project>\n" + WARNING
+                + "<project>\n"
+                + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + DUMMY_GAV
                 + "    <packaging>jar</packaging>\n"
@@ -573,7 +600,8 @@ public class ProjectObjectModelTest {
                 + "</project>\n", this::resolve);
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project>\n" + WARNING
+                + "<project>\n"
+                + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + DUMMY_GAV
                 + "    <packaging>jar</packaging>"
@@ -617,7 +645,8 @@ public class ProjectObjectModelTest {
                 + "</project>\n", this::resolve);
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project>\n" + WARNING
+                + "<project>\n"
+                + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + DUMMY_GAV
                 + "    <packaging>jar</packaging>\n"
@@ -657,7 +686,8 @@ public class ProjectObjectModelTest {
                 + "</project>\n", this::resolve);
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project>\n" + WARNING
+                + "<project>\n"
+                + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + DUMMY_GAV
                 + "    <packaging>jar</packaging>\n"
@@ -696,7 +726,8 @@ public class ProjectObjectModelTest {
                 + "</project>\n", this::resolve);
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project>\n" + WARNING
+                + "<project>\n"
+                + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + DUMMY_GAV
                 + "    <packaging>jar</packaging>"
@@ -734,7 +765,8 @@ public class ProjectObjectModelTest {
                 + "</project>\n", this::resolve);
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project>\n" + WARNING
+                + "<project>\n"
+                + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + DUMMY_GAV
                 + "    <packaging>jar</packaging>\n"
@@ -770,7 +802,8 @@ public class ProjectObjectModelTest {
                 + "</project>\n", this::resolve);
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project>\n" + WARNING
+                + "<project>\n"
+                + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + DUMMY_GAV
                 + "    <packaging>jar</packaging>"
@@ -805,7 +838,8 @@ public class ProjectObjectModelTest {
                 + "</project>\n", this::resolve);
 
         assertThat(pom.asString()).isEqualTo(XML
-                + "<project>\n" + WARNING
+                + "<project>\n"
+                + WARNING
                 + "    <modelVersion>4.0.0</modelVersion>\n"
                 + DUMMY_GAV
                 + "    <packaging>jar</packaging>"
