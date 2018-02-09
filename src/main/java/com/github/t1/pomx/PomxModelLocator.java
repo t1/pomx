@@ -1,6 +1,5 @@
 package com.github.t1.pomx;
 
-import lombok.SneakyThrows;
 import org.apache.maven.model.locator.ModelLocator;
 import org.apache.maven.repository.internal.MavenRepositorySystemUtils;
 import org.codehaus.plexus.component.annotations.*;
@@ -31,7 +30,6 @@ public class PomxModelLocator implements ModelLocator {
     }
 
 
-    @SneakyThrows(ArtifactResolutionException.class)
     private Path resolve(GAV gav, String type) {
         RepositorySystemSession session = newRepositorySystemSession();
         Artifact artifact = new DefaultArtifact(gav.getGroupId(), gav.getArtifactId(), type, gav.getVersion());
@@ -39,8 +37,12 @@ public class PomxModelLocator implements ModelLocator {
         request.setArtifact(artifact);
         // RemoteRepository central = new RemoteRepository.Builder("central", "default", remoteRepository).build();
         // request.addRepository(central);
-        ArtifactResult resolved = repositorySystem.resolveArtifact(session, request);
-        return resolved.getArtifact().getFile().toPath();
+        try {
+            ArtifactResult resolved = repositorySystem.resolveArtifact(session, request);
+            return resolved.getArtifact().getFile().toPath();
+        } catch (ArtifactResolutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private DefaultRepositorySystemSession newRepositorySystemSession() {

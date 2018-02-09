@@ -39,20 +39,22 @@ public class ProjectObjectModelTest {
 
         String xml = pom.asString();
 
-        assertThat(xml).isEqualTo(contentOf(new File("pom.xml"))
-                .replace("\" ?>", "\"?>")
-                .replace(warning("pomx.xml"), warning("pom.xml") + warning("pomx.xml")));
+        assertThat(xml
+                .replace(warning("pom.xml"), ""))
+                .isEqualTo(contentOf(new File("pom.xml"))
+                        .replace("\" ?>", "\"?>"));
     }
 
     @Test
     public void shouldWritePom() throws Exception {
-        ProjectObjectModel pom = ProjectObjectModel.readFrom(Paths.get("pomx.xml"),
+        String folder = "src/test/java/com/github/t1/pomx/";
+        ProjectObjectModel pom = ProjectObjectModel.readFrom(Paths.get(folder + "input-pomx.xml"),
                 (gav, type) -> REPOSITORY.resolve(gav.asPath(type)));
         Path target = Paths.get("target/test-pom.xml");
         try {
             pom.writeTo(target);
 
-            assertThat(contentOf(target.toFile())).isEqualTo(contentOf(new File("pom.xml")));
+            assertThat(contentOf(target.toFile())).isEqualTo(contentOf(new File(folder + "expected-pom.xml")));
         } finally {
             Files.deleteIfExists(target);
         }

@@ -1,7 +1,7 @@
 package com.github.t1.pomx;
 
 import com.github.t1.xml.*;
-import lombok.*;
+//import lombok.*;
 
 import java.io.IOException;
 import java.net.URI;
@@ -13,7 +13,6 @@ import static java.nio.charset.StandardCharsets.*;
 import static java.util.Arrays.*;
 import static java.util.stream.Collectors.*;
 
-@RequiredArgsConstructor
 class ProjectObjectModel {
     private static final List<String> PACKAGINGS = asList("war", "jar", "pom");
 
@@ -30,6 +29,11 @@ class ProjectObjectModel {
     private static final String XSI = "xmlns:xsi";
     private static final String SCHEMA_LOCATION = "xsi:schemaLocation";
     private static final String POMX_500 = "urn:xsd:maven:pomx:5.0.0";
+
+    ProjectObjectModel(Resolver resolver, Xml in) {
+        this.resolver = resolver;
+        this.in = in;
+    }
 
 
     static ProjectObjectModel from(String xml, Resolver resolver) { return from(Xml.fromString(xml), resolver); }
@@ -198,6 +202,11 @@ class ProjectObjectModel {
 
     private Xml asXml() { return converted(); }
 
-    @SneakyThrows(IOException.class)
-    void writeTo(Path path) { Files.write(path, asString().getBytes(UTF_8)); }
+    void writeTo(Path path) {
+        try {
+            Files.write(path, asString().getBytes(UTF_8));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

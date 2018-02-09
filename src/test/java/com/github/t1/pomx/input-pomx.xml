@@ -5,8 +5,6 @@
     <name>POM-X</name>
     <description>Extended Maven POM file format</description>
 
-    <profile>com.github.t1:maven-extension:3.3.9-SNAPSHOT</profile>
-
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
