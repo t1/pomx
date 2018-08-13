@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project
+        xmlns="urn:xsd:maven:pomx:5.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="urn:xsd:maven:pomx:5.0.0 pomx-5.0.0.xsd">
+    <pom>dummy-group:profile-with-nested-profile:1.0</pom>
+
+    <build>
+        <plugins>
+            <plugin id="org.apache.maven.plugins:maven-enforcer-plugin:3.0.0-M2">
+                <dependencies>
+                    <dependency>org.sonatype.ossindex.maven:ossindex-maven-enforcer-rules:1.0.0</dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <banVunerableDependencies
+                                        implementation="org.sonatype.ossindex.maven.enforcer.BanVulnerableDependencies"/>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <test>
+            <jar>org.junit.jupiter:junit-jupiter-api:5.2.0</jar>
+        </test>
+    </dependencies>
+</project>

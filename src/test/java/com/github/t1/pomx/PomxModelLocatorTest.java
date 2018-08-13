@@ -1,7 +1,9 @@
 package com.github.t1.pomx;
 
 import org.codehaus.plexus.logging.Logger;
-import org.junit.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.nio.file.*;
@@ -10,28 +12,26 @@ import static java.nio.charset.StandardCharsets.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class PomxModelLocatorTest {
+class PomxModelLocatorTest {
     private final PomxModelLocator locator = new PomxModelLocator();
 
     private Path tmp;
 
-    @Before public void setUp() throws Exception {
+    @BeforeEach void setUp() throws Exception {
         tmp = Files.createTempDirectory("pom-locator");
         locator.log = mock(Logger.class);
     }
 
-    @After public void tearDown() throws Exception { Files.delete(tmp); }
+    @AfterEach void tearDown() throws Exception { Files.delete(tmp); }
 
-    @Test
-    public void shouldNotLocateMissingPomx() throws Exception {
+    @Test void shouldNotLocateMissingPomx() {
         File found = locator.locatePom(tmp.toFile());
 
         assertThat(found).isEqualTo(tmp.resolve("pom.xml").toFile());
         verifyNoMoreInteractions(locator.log);
     }
 
-    @Test
-    public void shouldLocateExistingPomx() throws Exception {
+    @Test void shouldLocateExistingPomx() throws Exception {
         Path pomx = tmp.resolve("pomx.xml");
         File pom = null;
         try {

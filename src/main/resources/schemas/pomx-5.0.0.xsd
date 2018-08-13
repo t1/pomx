@@ -845,74 +845,10 @@
             <xs:documentation source="version">3.0.0+</xs:documentation>
         </xs:annotation>
         <xs:all>
-            <xs:element name="groupId" minOccurs="0" type="xs:string">
+            <xs:element name="dependency" minOccurs="0" type="xs:complexType">
                 <xs:annotation>
-                    <xs:documentation source="version">3.0.0+</xs:documentation>
-                    <xs:documentation source="description">
-                        The project group that produced the dependency, e.g.
-                        &lt;code&gt;org.apache.maven&lt;/code&gt;.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="artifactId" minOccurs="0" type="xs:string">
-                <xs:annotation>
-                    <xs:documentation source="version">3.0.0+</xs:documentation>
-                    <xs:documentation source="description">
-                        The unique id for an artifact produced by the project group, e.g.
-                        &lt;code&gt;maven-artifact&lt;/code&gt;.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="version" minOccurs="0" type="xs:string">
-                <xs:annotation>
-                    <xs:documentation source="version">3.0.0+</xs:documentation>
-                    <xs:documentation source="description">
-                        The version of the dependency, e.g. &lt;code&gt;3.2.1&lt;/code&gt;. In Maven 2, this can also be
-                        specified as a range of versions.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="type" minOccurs="0" type="xs:string" default="jar">
-                <xs:annotation>
-                    <xs:documentation source="version">4.0.0</xs:documentation>
-                    <xs:documentation source="description">
-                        The type of dependency. This defaults to &lt;code&gt;jar&lt;/code&gt;. While it usually
-                        represents the extension on
-                        the filename of the dependency, that is not always the case. A type can be mapped to a different
-                        extension and a classifier.
-                        The type often correspongs to the packaging used, though this is also not always the case.
-                        Some examples are &lt;code&gt;jar&lt;/code&gt;, &lt;code&gt;war&lt;/code&gt;, &lt;code&gt;ejb-client&lt;/code&gt;
-                        and &lt;code&gt;test-jar&lt;/code&gt;.
-                        New types can be defined by plugins that set
-                        &lt;code&gt;extensions&lt;/code&gt; to &lt;code&gt;true&lt;/code&gt;, so this is not a complete
-                        list.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="classifier" minOccurs="0" type="xs:string">
-                <xs:annotation>
-                    <xs:documentation source="version">4.0.0</xs:documentation>
-                    <xs:documentation source="description">
-                        The classifier of the dependency. This allows distinguishing two artifacts that belong to the
-                        same POM but
-                        were built differently, and is appended to the filename after the version. For example,
-                        &lt;code&gt;jdk14&lt;/code&gt; and &lt;code&gt;jdk15&lt;/code&gt;.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="scope" minOccurs="0" type="xs:string">
-                <xs:annotation>
-                    <xs:documentation source="version">4.0.0</xs:documentation>
-                    <xs:documentation source="description">
-                        The scope of the dependency - &lt;code&gt;compile&lt;/code&gt;, &lt;code&gt;runtime&lt;/code&gt;,
-                        &lt;code&gt;test&lt;/code&gt;,
-                        &lt;code&gt;system&lt;/code&gt;, and &lt;code&gt;provided&lt;/code&gt;. Used to
-                        calculate the various classpaths used for compilation, testing, and so on. It also assists in
-                        determining
-                        which artifacts to include in a distribution of this project. For more information, see
-                        &lt;a href=&quot;http://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html&quot;&gt;the
-                        dependency mechanism&lt;/a&gt;.
-                    </xs:documentation>
+                    <xs:documentation source="version">5.0.0</xs:documentation>
+                    <xs:documentation source="description">An unscoped dependency nested in, e.g. a plugin</xs:documentation>
                 </xs:annotation>
             </xs:element>
             <xs:element name="systemPath" minOccurs="0" type="xs:string">
@@ -1289,8 +1225,7 @@
                 <xs:annotation>
                     <xs:documentation source="version">4.0.0</xs:documentation>
                     <xs:documentation source="description">Additional dependencies that this project needs to introduce
-                        to the plugin&apos;s
-                        classloader.
+                        to the plugin&apos;s classloader.
                     </xs:documentation>
                 </xs:annotation>
                 <xs:complexType>
