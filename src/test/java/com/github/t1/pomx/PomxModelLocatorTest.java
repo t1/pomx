@@ -4,23 +4,24 @@ import org.codehaus.plexus.logging.Logger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
-import static java.nio.charset.StandardCharsets.*;
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 class PomxModelLocatorTest {
     private final PomxModelLocator locator = new PomxModelLocator();
 
-    private Path tmp;
+    @TempDir Path tmp;
 
-    @BeforeEach void setUp() throws Exception {
-        tmp = Files.createTempDirectory("pom-locator");
-        locator.log = mock(Logger.class);
-    }
+    @BeforeEach void setUp() { locator.log = mock(Logger.class); }
 
     @AfterEach void tearDown() throws Exception { Files.delete(tmp); }
 
