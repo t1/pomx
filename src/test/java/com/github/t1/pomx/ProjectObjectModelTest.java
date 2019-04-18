@@ -241,6 +241,46 @@ class ProjectObjectModelTest {
             + "</project>\n");
     }
 
+    @Test void shouldAddPluginDependencies() {
+        ProjectObjectModel pom = ProjectObjectModel.from(XML
+            + "<project>\n"
+            + "    <build>\n"
+            + "        <plugins>\n"
+            + "            <plugin id=\"org.apache.maven.plugins:maven-surefire-plugin:2.22.1\">\n" +
+            "                <dependencies>\n" +
+            "                    <jar>org.junit.platform:junit-platform-surefire-provider:1.2.0</jar>\n" +
+            "                    <jar>org.junit.jupiter:junit-jupiter-engine:${junit.version}</jar>\n" +
+            "                </dependencies>\n" +
+            "            </plugin>\n"
+            + "        </plugins>\n"
+            + "    </build>\n"
+            + "</project>\n", this::resolve);
+
+        assertThat(pom.asString()).isEqualTo(HEAD
+            + "    <modelVersion>4.0.0</modelVersion>\n"
+            + "    <build>\n"
+            + "        <plugins>\n"
+            + "            <plugin>\n"
+            + "                <groupId>org.apache.maven.plugins</groupId>\n"
+            + "                <artifactId>maven-surefire-plugin</artifactId>\n"
+            + "                <version>2.22.1</version>\n"
+            + "                <dependencies>\n"
+            + "                    <dependency>\n"
+            + "                        <groupId>org.junit.platform</groupId>\n"
+            + "                        <artifactId>junit-platform-surefire-provider</artifactId>\n"
+            + "                        <version>1.2.0</version>\n"
+            + "                    </dependency>\n"
+            + "                    <dependency>\n"
+            + "                        <groupId>org.junit.jupiter</groupId>\n"
+            + "                        <artifactId>junit-jupiter-engine</artifactId>\n"
+            + "                        <version>${junit.version}</version>\n"
+            + "                    </dependency>\n"
+            + "                </dependencies>\n"
+            + "            </plugin>\n"
+            + "        </plugins>\n"
+            + "    </build>\n"
+            + "</project>\n");
+    }
 
     @Test void shouldExpandDependencyManagement() {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
