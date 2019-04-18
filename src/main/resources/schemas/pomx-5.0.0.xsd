@@ -1231,7 +1231,7 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element name="dependency" minOccurs="0" maxOccurs="unbounded" type="Dependency"/>
-                        <xs:element name="jar" minOccurs="0" type="xs:string">
+                        <xs:element name="jar" minOccurs="0" maxOccurs="unbounded" type="xs:string">
                             <xs:annotation>
                                 <xs:documentation source="version">5.0.0+</xs:documentation>
                                 <xs:documentation source="description">The GAV coordinates for a 'jar' packaging.</xs:documentation>
