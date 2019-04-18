@@ -352,6 +352,30 @@ class ProjectObjectModelTest {
             + "</project>\n");
     }
 
+    @Test void shouldExpandPomDependency() {
+        ProjectObjectModel pom = ProjectObjectModel.from(XML
+            + "<project>\n"
+            + "    <dependencies>\n"
+            + "        <provided>\n"
+            + "            <pom>org.eclipse.microprofile:microprofile:2.2</pom>\n"
+            + "        </provided>\n"
+            + "    </dependencies>\n"
+            + "</project>\n", this::resolve);
+
+        assertThat(pom.asString()).isEqualTo(HEAD
+            + "    <modelVersion>4.0.0</modelVersion>\n"
+            + "    <dependencies>\n"
+            + "        <dependency>\n"
+            + "            <groupId>org.eclipse.microprofile</groupId>\n"
+            + "            <artifactId>microprofile</artifactId>\n"
+            + "            <version>2.2</version>\n"
+            + "            <type>pom</type>\n"
+            + "            <scope>provided</scope>\n"
+            + "        </dependency>\n"
+            + "    </dependencies>\n"
+            + "</project>\n");
+    }
+
     @Test void shouldExpandExternalProfile() {
         ProjectObjectModel pom = ProjectObjectModel.from(XML
             + "<project>\n"

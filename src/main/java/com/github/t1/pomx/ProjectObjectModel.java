@@ -169,7 +169,7 @@ class ProjectObjectModel {
                     .stream()
                     .filter(scope -> SCOPES.contains(scope.getName()))
                     .forEach(scope -> {
-                        scope.find("jar")
+                        scope.find("jar|pom")
                             .forEach(dependency -> expandDependency(dependencies, scope, dependency));
                         scope.remove();
                     }));
@@ -182,6 +182,8 @@ class ProjectObjectModel {
         element.addElement("artifactId").addText(gav.getArtifactId());
         if (gav.getVersion() != null)
             element.addElement("version").addText(gav.getVersion());
+        if (dependency.getName().equals("pom"))
+            element.addElement("type").addText("pom");
         element.addElement("scope").addText(scope.getName());
     }
 
