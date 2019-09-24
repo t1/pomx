@@ -198,7 +198,7 @@ class ProjectObjectModel {
                 XmlElement target = out.getOrCreateElement("profiles").addElement("profile");
                 target.addElement("id").addText(gav.getGroupId() + ":" + gav.getArtifactId());
                 // user.dir is always set, so this activation always triggers
-                target.addElement("activation").addElement("property").addElement("name").addText("user.dir");
+                target.addElement("activation").addElement("activeByDefault").addText("true");
 
                 String propertyName = gav.getGroupId() + "." + gav.getArtifactId() + ".version";
                 target.getOrCreateElement("properties").addElement(propertyName, atBegin()).addText(gav.getVersion());
