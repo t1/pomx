@@ -198,6 +198,7 @@ class ProjectObjectModel {
                 XmlElement target = out.getOrCreateElement("profiles").addElement("profile");
                 target.addElement("id").addText(gav.getGroupId() + ":" + gav.getArtifactId());
                 // user.dir is always set, so this activation always triggers
+                // this is better than activeByDefault, which deactivates when any other profile is activated
                 target.addElement("activation").addElement("property").addElement("name").addText("user.dir");
 
                 String propertyName = gav.getGroupId() + "." + gav.getArtifactId() + ".version";
