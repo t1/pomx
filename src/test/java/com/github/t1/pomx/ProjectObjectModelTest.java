@@ -15,13 +15,16 @@ import static org.assertj.core.api.Assertions.contentOf;
 
 class ProjectObjectModelTest {
     private static final String XML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-    private static final String FULL_NS = "\n"
-        + "        xmlns=\"http://maven.apache.org/POM/4.0.0\"\n"
-        + "        xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
-        + "        xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\"";
+    private static final String JDK8_NS = ""
+        + "xmlns=\"http://maven.apache.org/POM/4.0.0\" "
+        + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
+        + "xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\"";
+    private static final String JDK9_NS = ""
+        + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
+        + "xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\"";
+    private static final String NS = (isJdk9() ? JDK9_NS : JDK8_NS);
     private static final String WARNING = warning(isJdk9() ? "nil:- -" : "nil:--");
-    private static final String NS = "\n<project" + (isJdk9() ? FULL_NS : "") + ">\n";
-    private static final String HEAD = XML + NS + WARNING;
+    private static final String HEAD = XML + "\n<project " + NS + ">\n" + WARNING;
 
     private static String warning(Object source) {
         return ""
@@ -51,10 +54,11 @@ class ProjectObjectModelTest {
 
         assertThat(xml
             .replace(warning("pom.xml"), "")
-            .replace("<project xmlns=\"http://maven.apache.org/POM/4.0.0\">", // this is only in JDK8
-                "<project" + FULL_NS + ">")
-        ).isEqualTo(contentOf(new File("pom.xml"))
-            .replace("\" ?>", "\"?>"));
+            .replace("<project " + NS + ">", "<project\n" +
+                "        xmlns=\"http://maven.apache.org/POM/4.0.0\"\n" +
+                "        xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
+                "        xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">")
+        ).isEqualTo(contentOf(new File("pom.xml")));
     }
 
     @Test void shouldWritePom() throws Exception {
@@ -65,11 +69,9 @@ class ProjectObjectModelTest {
         try {
             pom.writeTo(target);
 
-            assertThat(contentOf(target.toFile())
-                .replace("<project xmlns=\"urn:xsd:maven:pomx:5.0.0\">", // this is only in JDK8
-                    "<project" + FULL_NS + ">")
-            )
-                .isEqualTo(contentOf(new File(folder + "expected-pom.xml")));
+            assertThat(contentOf(target.toFile()))
+                .isEqualTo(contentOf(new File(folder + "expected-pom.xml"))
+                    .replace(JDK8_NS, NS));
         } finally {
             Files.deleteIfExists(target);
         }
@@ -84,7 +86,7 @@ class ProjectObjectModelTest {
             + "</project>\n"), this::resolve);
 
         assertThat(pom.asString()).isEqualTo((XML
-            + "\n<project" + (isJdk9() ? FULL_NS : " xmlns=\"urn:xsd:maven:pomx:5.0.0\"") + ">\n"
+            + "\n<project " + NS + ">\n"
             + WARNING)
             + "    <modelVersion>4.0.0</modelVersion>\n"
             + "</project>\n");

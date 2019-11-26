@@ -29,12 +29,6 @@ class ProjectObjectModel {
         asList("licenses", "repositories", "distributionManagement", "scm", "profiles");
 
     private static final List<String> SCOPES = asList("provided", "compile", "runtime", "system", "test");
-    private static final String COMPACT_HEAD = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><project>";
-    private static final String EXPANDED_HEAD = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-        "<project\n" +
-        "        xmlns=\"http://maven.apache.org/POM/4.0.0\"\n" +
-        "        xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
-        "        xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">";
 
     private ProjectObjectModel(Resolver resolver, Xml in) {
         this.resolver = resolver;
@@ -54,7 +48,7 @@ class ProjectObjectModel {
     private Xml out;
 
 
-    String asString() { return converted().toXmlString().replace(COMPACT_HEAD, EXPANDED_HEAD); }
+    String asString() { return converted().toXmlString(); }
 
     private Xml converted() {
         if (out == null) {
@@ -65,7 +59,7 @@ class ProjectObjectModel {
     }
 
     private void expand() {
-        removeNamespace();
+        convertNamespace();
         expandModelVersion();
         writeGeneratedWarning();
         expandGav();
@@ -75,9 +69,10 @@ class ProjectObjectModel {
         expandExternalProfiles();
     }
 
-    private void removeNamespace() {
-        out.removeAttribute("xmlns:xsi");
-        out.removeAttribute("xsi:schemaLocation");
+    private void convertNamespace() {
+        out.setAttribute("xmlns", "http://maven.apache.org/POM/4.0.0");
+        out.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+        out.setAttribute("xsi:schemaLocation", "http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd");
     }
 
     private void writeGeneratedWarning() {
