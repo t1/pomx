@@ -275,14 +275,12 @@ So you'll have to fetch them manually before you start the first build:
 
 `mvn dependency:get -DgroupId=my.group -DartifactId=my.artifact -Dpackaging=xml -Dversion=1.0`
 
-### Compensate For Release Plugin
+### Compensate For External Changes
 
-The release plugin manipulates the `pom.xml`, not the source of truth `pomx`,
-e.g. it sets the version `1.2.3-SNAPSHOT` to `1.2.3`.
-So when it starts the actual build, pomx overwrites the `pom.xml` reverting the version change.
+E.g. the maven release plugin manipulates the `pom.xml`, not the source of truth `pomx`, by setting the version, e.g., `1.2.3-SNAPSHOT` to `1.2.3`. When it starts the actual build, pomx overwrites the `pom.xml` reverting the version change.
 The build won't properly run.
 
-Im currently unsure how to fix it.
+Im currently unsure how to fix it. We could hook into the plugins, or we could check the change date and when the pom is newer than the pomx, we could create a diff and apply it to the pomx.
 
 As a manual workaround, I do the following steps:
 - disable the extension (renaming the `.mvn` directory is generally good enough)
