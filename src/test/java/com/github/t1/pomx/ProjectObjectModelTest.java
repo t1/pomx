@@ -935,7 +935,7 @@ class ProjectObjectModelTest {
             + "                <dependency>\n"
             + "            <groupId>org.junit.jupiter</groupId>\n"
             + "            <artifactId>junit-jupiter-api</artifactId>\n"
-            + "            <version>5.2.0</version>\n"
+            + "            <version>5.6.0</version>\n"
             + "            <scope>test</scope>\n"
             + "        </dependency>\n"
             + "            </dependencies>\n"
