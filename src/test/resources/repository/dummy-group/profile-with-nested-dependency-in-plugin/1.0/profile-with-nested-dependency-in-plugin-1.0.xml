@@ -7,7 +7,7 @@
 
     <build>
         <plugins>
-            <plugin id="org.apache.maven.plugins:maven-enforcer-plugin:3.0.0-M2">
+            <plugin id="org.apache.maven.plugins:maven-enforcer-plugin:3.0.0-M3">
                 <dependencies>
                     <dependency>org.sonatype.ossindex.maven:ossindex-maven-enforcer-rules:1.0.0</dependency>
                 </dependencies>

@@ -907,7 +907,7 @@ class ProjectObjectModelTest {
             + "            <plugin>\n"
             + "                <groupId>org.apache.maven.plugins</groupId>\n"
             + "                <artifactId>maven-enforcer-plugin</artifactId>\n"
-            + "                <version>3.0.0-M2</version>\n"
+            + "                <version>3.0.0-M3</version>\n"
             + "                <dependencies>\n"
             + "                    <dependency>\n"
             + "                        <groupId>org.sonatype.ossindex.maven</groupId>\n"
