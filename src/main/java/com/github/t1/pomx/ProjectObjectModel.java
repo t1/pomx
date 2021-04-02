@@ -26,7 +26,7 @@ class ProjectObjectModel {
 
     /** also in README! */
     private static final List<String> PROFILE_COPY_TO_PROJECT_ELEMENTS =
-        asList("licenses", "repositories", "distributionManagement", "scm", "profiles");
+        asList("licenses", "developers", "repositories", "distributionManagement", "scm", "profiles");
 
     private static final List<String> SCOPES = asList("provided", "compile", "runtime", "system", "test");
 
