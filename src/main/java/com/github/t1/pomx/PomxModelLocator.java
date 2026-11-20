@@ -8,7 +8,11 @@ import org.eclipse.aether.*;
 import org.eclipse.aether.artifact.*;
 import org.eclipse.aether.repository.LocalRepository;
 import org.eclipse.aether.resolution.*;
+import org.eclipse.aether.internal.impl.SimpleLocalRepositoryManagerFactory;
+import org.eclipse.aether.repository.RemoteRepository;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import java.io.File;
 import java.nio.file.*;
 
@@ -17,7 +21,11 @@ public class PomxModelLocator implements ModelLocator {
     static final Path REPOSITORY = Paths.get(System.getProperty("user.home")).resolve(".m2/repository");
 
     @Requirement Logger log;
-    @Requirement RepositorySystem repositorySystem;
+    // lazy: eager injection of RepositorySystem would create a circular dependency
+    // (RepositorySystem -> ... -> ModelProcessor -> ModelLocator -> RepositorySystem)
+    @Inject Provider<RepositorySystem> repositorySystemProvider;
+
+    private RepositorySystem repositorySystem() { return repositorySystemProvider.get(); }
 
     @Override public File locatePom(File dir) {
         Path pom = dir.toPath().resolve("pom.xml");
@@ -35,10 +43,9 @@ public class PomxModelLocator implements ModelLocator {
         Artifact artifact = new DefaultArtifact(gav.getGroupId(), gav.getArtifactId(), type, gav.getVersion());
         ArtifactRequest request = new ArtifactRequest();
         request.setArtifact(artifact);
-        // RemoteRepository central = new RemoteRepository.Builder("central", "default", remoteRepository).build();
-        // request.addRepository(central);
+        request.addRepository(new RemoteRepository.Builder("central", "default", "https://repo1.maven.org/maven2").build());
         try {
-            ArtifactResult resolved = repositorySystem.resolveArtifact(session, request);
+            ArtifactResult resolved = repositorySystem().resolveArtifact(session, request);
             return resolved.getArtifact().getFile().toPath();
         } catch (ArtifactResolutionException e) {
             throw new RuntimeException(e);
@@ -47,9 +54,16 @@ public class PomxModelLocator implements ModelLocator {
 
     private DefaultRepositorySystemSession newRepositorySystemSession() {
         DefaultRepositorySystemSession session = MavenRepositorySystemUtils.newSession();
+        session.setOffline(false);
 
         LocalRepository localRepo = new LocalRepository(REPOSITORY.toFile());
-        session.setLocalRepositoryManager(repositorySystem.newLocalRepositoryManager(session, localRepo));
+        // SimpleLocalRepositoryManager: no _remote.repositories tracking, so locally
+        // cached artifacts are always considered available
+        try {
+            session.setLocalRepositoryManager(new SimpleLocalRepositoryManagerFactory().newInstance(session, localRepo));
+        } catch (org.eclipse.aether.repository.NoLocalRepositoryManagerException e) {
+            throw new RuntimeException(e);
+        }
 
         // uncomment to generate dirty trees
         // session.setDependencyGraphTransformer( null );

@@ -2,3 +2,10 @@
 pomx.iml
 polyglot/
 target/
+
+.classpath
+.project
+.factorypath
+/.settings/
+
+/.pi/settings/jdtls.json
