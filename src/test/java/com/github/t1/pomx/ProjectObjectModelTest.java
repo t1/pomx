@@ -15,15 +15,11 @@ import static org.assertj.core.api.Assertions.contentOf;
 
 class ProjectObjectModelTest {
     private static final String XML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-    private static final String JDK8_NS = ""
+    private static final String NS = ""
         + "xmlns=\"http://maven.apache.org/POM/4.0.0\" "
         + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
         + "xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\"";
-    private static final String JDK9_NS = ""
-        + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
-        + "xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\"";
-    private static final String NS = (isJdk9() ? JDK9_NS : JDK8_NS);
-    private static final String WARNING = warning(isJdk9() ? "nil:- -" : "nil:--");
+    private static final String WARNING = warning("nil:- -");
     private static final String HEAD = XML + "\n<project " + NS + ">\n" + WARNING;
 
     private static String warning(Object source) {
@@ -38,10 +34,6 @@ class ProjectObjectModelTest {
         + "    <version>1.2.3-SNAPSHOT</version>\n";
 
     private static final Path TEST_REPO = Paths.get("src/test/resources/repository");
-
-    private static boolean isJdk9() {
-        return Double.parseDouble(System.getProperty("java.specification.version")) >= 9.0;
-    }
 
     private Path resolve(GAV gav, String type) { return TEST_REPO.resolve(gav.asPath(type)); }
 
@@ -70,8 +62,7 @@ class ProjectObjectModelTest {
             pom.writeTo(target);
 
             assertThat(contentOf(target.toFile()))
-                .isEqualTo(contentOf(new File(folder + "expected-pom.xml"))
-                    .replace(JDK8_NS, NS));
+                .isEqualTo(contentOf(new File(folder + "expected-pom.xml")));
         } finally {
             Files.deleteIfExists(target);
         }

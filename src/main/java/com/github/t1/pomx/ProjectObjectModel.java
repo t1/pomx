@@ -2,7 +2,12 @@ package com.github.t1.pomx;
 
 import com.github.t1.xml.Xml;
 import com.github.t1.xml.XmlElement;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
@@ -36,9 +41,9 @@ class ProjectObjectModel {
     }
 
 
-    static ProjectObjectModel from(String xml, Resolver resolver) { return from(Xml.fromString(xml), resolver); }
+    static ProjectObjectModel from(String xml, Resolver resolver) { return from(parse(xml), resolver); }
 
-    static ProjectObjectModel readFrom(Path path, Resolver resolver) { return from(Xml.load(path.toUri()), resolver); }
+    static ProjectObjectModel readFrom(Path path, Resolver resolver) { return from(load(path.toUri()), resolver); }
 
     static ProjectObjectModel from(Xml xml, Resolver resolver) { return new ProjectObjectModel(resolver, xml); }
 
@@ -52,10 +57,35 @@ class ProjectObjectModel {
 
     private Xml converted() {
         if (out == null) {
-            out = Xml.fromString(in.toXmlString());
+            out = parse(in.toXmlString());
             expand();
         }
         return out;
+    }
+
+    // We can't use Xml.fromString: as of 0.0.16 the xml lib parses namespace-aware, which breaks pomx.
+    // pomx matches elements by raw tag name (unprefixed xpath) and converts the pomx namespace into
+    // the Maven POM namespace by setting the `xmlns` attribute in convertNamespace() — impossible on
+    // a namespace-aware DOM, where an element's namespace is intrinsic. So we parse without namespace
+    // awareness here, which restores the pre-0.0.16 behavior.
+    private static Xml parse(String xml) {
+        try {
+            Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new ByteArrayInputStream(xml.getBytes(UTF_8)));
+            return new Xml(document);
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            throw new RuntimeException("could not parse xml", e);
+        }
+    }
+
+    // Same as Xml.load (which sets the document uri), but without namespace awareness — see parse(String)
+    private static Xml load(URI uri) {
+        try {
+            Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(uri.toASCIIString());
+            document.setDocumentURI(uri.toString());
+            return new Xml(document);
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            throw new RuntimeException("could not load xml from " + uri, e);
+        }
     }
 
     private void expand() {

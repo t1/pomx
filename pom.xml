@@ -163,7 +163,7 @@
         <dependency>
             <groupId>com.github.t1</groupId>
             <artifactId>xml</artifactId>
-            <version>0.0.15</version>
+            <version>0.0.17</version>
             <scope>compile</scope>
         </dependency>
 
